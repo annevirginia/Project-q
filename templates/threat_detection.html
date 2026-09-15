@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}Live Threat Detection & Digital Signature Defense Console{% endblock %}
+
+{% block content %}
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h2 class="panel-title"><span>🛡️</span> Live Cyber Threat Detection & Digital Signature Console</h2>
+            <p class="panel-subtitle">Test real network flow records across classical and quantum classifiers with Quantum Digital Signature state verification</p>
+        </div>
+        <span class="badge badge-cyan">Interactive Testing</span>
+    </div>
+
+    <!-- Instructions Callout -->
+    <div class="alert-callout alert-info">
+        <span style="font-size: 1.4rem;">💡</span>
+        <div>
+            <strong>Interactive Verification:</strong> Select an authentic CIC-IDS2017 flow preset below (or input your own JSON vector) and click <strong>Execute Hybrid Cyber Defense Test</strong>. The system will concurrently run the Classical Random Forest and Quantum Kernel circuits, evaluate the resulting threat confidence, and execute the Quantum Digital Signature (QDS) Bell-state fidelity protocol.
+        </div>
+    </div>
+
+    <!-- Packet Submission Form -->
+    <div class="panel" style="background: var(--bg-surface-elevated); margin-bottom: 2rem;">
+        <form id="packetPredictionForm">
+            <div class="grid-2">
+                <div class="form-group">
+                    <label class="form-label">Select Authentic CIC Flow Preset</label>
+                    <select id="presetSelector" class="form-control">
+                        <option value="benign">Normal Flow (BENIGN) - Standard PKI Verification</option>
+                        <option value="bruteforce">Web Attack: Brute Force - Signing Credential Impersonation</option>
+                        <option value="sqlinjection">Web Attack: SQL Injection - Key Store / Trust Forgery</option>
+                        <option value="portscan">PortScan - OCSP / Revocation Server Reconnaissance</option>
+                    </select>
+                    <small id="presetDescription" style="color: var(--color-text-muted); font-size: 0.78rem; margin-top: 0.35rem; display: block;">
+                        Authentic CIC-IDS2017 Normal Flow (BENIGN)
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Flow Attack Context / Label</label>
+                    <input type="text" id="attackLabelInput" class="form-control" value="BENIGN" placeholder="e.g. BENIGN, Brute Force, Sql Injection">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Network Flow Feature Vector (Numeric JSON Array)</label>
+                <textarea id="featureVectorInput" class="form-control" rows="4" style="font-family: var(--font-mono); font-size: 0.8rem;"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="padding: 0.8rem 2rem; font-size: 0.95rem;">
+                ⚡ Execute Hybrid Cyber Defense Test
+            </button>
+        </form>
+    </div>
+
+    <!-- Live Prediction Results Container -->
+    <div id="predictionResultsBox" style="display: none;">
+        <h3 style="font-size: 1.3rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span>🔍</span> Real-Time Hybrid Threat & Quantum Security Evaluation
+        </h3>
+
+        <!-- Dual Model Prediction Cards -->
+        <div class="grid-2">
+            <!-- Classical Card -->
+            <div class="panel" style="border-left: 4px solid var(--accent-cyan);">
+                <div class="panel-header">
+                    <div>
+                        <h4 class="panel-title">Classical Model (Random Forest)</h4>
+                        <p class="panel-subtitle">Full-dimension ensemble decision tree</p>
+                    </div>
+                    <span id="classicalBadge" class="badge badge-safe">NORMAL</span>
+                </div>
+                <div id="classicalVerdict" style="font-size: 1.4rem; font-weight: 800; margin-bottom: 0.35rem; color: var(--color-text-primary);">
+                    NORMAL NETWORK FLOW
+                </div>
+                <div id="classicalConfidence" class="val-mono" style="color: var(--accent-cyan); font-size: 1.05rem;">
+                    98.5% Confidence
+                </div>
+            </div>
+
+            <!-- Quantum Card -->
+            <div class="panel" style="border-left: 4px solid var(--accent-quantum-light);">
+                <div class="panel-header">
+                    <div>
+                        <h4 class="panel-title">Quantum Model (PennyLane QSVC)</h4>
+                        <p class="panel-subtitle">4-Qubit Angle-Encoded Statevector</p>
+                    </div>
+                    <span id="quantumBadge" class="badge badge-safe">NORMAL</span>
+                </div>
+                <div id="quantumVerdict" style="font-size: 1.4rem; font-weight: 800; margin-bottom: 0.35rem; color: var(--color-text-primary);">
+                    NORMAL NETWORK FLOW
+                </div>
+                <div id="quantumConfidence" class="val-mono" style="color: var(--accent-quantum-light); font-size: 1.05rem;">
+                    95.2% Quantum State Confidence
+                </div>
+            </div>
+        </div>
+
+        <!-- Digital Signature Security & Quantum Protocol Impact Panel -->
+        <div class="panel" style="background: var(--bg-surface-elevated); border: 1px solid rgba(147, 51, 234, 0.3); box-shadow: var(--shadow-glow-quantum);">
+            <div class="panel-header">
+                <div>
+                    <h4 class="panel-title" style="color: #c084fc;">
+                        <span>⚛️</span> Quantum Digital Signature (QDS) Verification Protocol
+                    </h4>
+                    <p class="panel-subtitle">Bell-state entanglement fidelity $F(\rho, \sigma)$ & anomaly thresholding</p>
+                </div>
+                <span id="qdsStatusBadge" class="badge badge-safe">VERIFIED AUTHENTIC</span>
+            </div>
+
+            <div class="grid-cards-4" style="margin-bottom: 1.25rem;">
+                <div class="metric-card" style="background: var(--bg-surface);">
+                    <div class="metric-header"><span class="metric-title">Signature Status</span></div>
+                    <div id="qdsSignatureStatus" class="val-mono" style="font-size: 1.2rem; font-weight: 800; color: var(--status-safe);">
+                        VERIFIED_AUTHENTIC
+                    </div>
+                    <div class="metric-footer"><span>Protocol Outcome</span></div>
+                </div>
+
+                <div class="metric-card" style="background: var(--bg-surface);">
+                    <div class="metric-header"><span class="metric-title">Quantum State Fidelity</span></div>
+                    <div id="qdsFidelityValue" class="val-mono" style="font-size: 1.4rem; color: #38bdf8;">
+                        98.2%
+                    </div>
+                    <div class="metric-footer"><span>Threshold: 85.0%</span></div>
+                </div>
+
+                <div class="metric-card" style="background: var(--bg-surface);">
+                    <div class="metric-header"><span class="metric-title">Quantum Bit Error Rate (QBER)</span></div>
+                    <div id="qdsQberValue" class="val-mono" style="font-size: 1.4rem; color: var(--accent-quantum-light);">
+                        1.8%
+                    </div>
+                    <div class="metric-footer"><span>Max Allowed: 15.0%</span></div>
+                </div>
+
+                <div class="metric-card" style="background: var(--bg-surface);">
+                    <div class="metric-header"><span class="metric-title">Threat Impact Category</span></div>
+                    <div id="qdsThreatCategory" style="font-size: 0.95rem; font-weight: 700; color: #f8fafc;">
+                        Legitimate Operation
+                    </div>
+                    <div class="metric-footer"><span>Digital Signature Risk</span></div>
+                </div>
+            </div>
+
+            <div style="background: var(--bg-surface); padding: 1.25rem; border-radius: var(--radius-sm); border-left: 4px solid var(--accent-quantum);">
+                <div style="font-size: 0.8rem; text-transform: uppercase; color: #c084fc; font-weight: 700; margin-bottom: 0.3rem;">
+                    Digital Signature Security Impact & Quantum Decision:
+                </div>
+                <p id="qdsThreatImpact" style="font-size: 0.9rem; color: #e2e8f0; margin-bottom: 0.5rem; line-height: 1.5;">
+                    Normal signing / verification request via authorized PKI channel.
+                </p>
+                <p id="qdsSecurityVerdict" style="font-size: 0.85rem; color: var(--color-text-secondary); font-style: italic;">
+                    Signature verification succeeded with high quantum state fidelity.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

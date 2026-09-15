@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}Comparative Benchmark | Classical vs Quantum{% endblock %}
+
+{% block content %}
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h2 class="panel-title"><span>⚖️</span> Head-to-Head Comparative Benchmark</h2>
+            <p class="panel-subtitle">Apples-to-apples performance and computational complexity comparison on identical CIC-IDS2017 splits</p>
+        </div>
+        <span class="badge badge-cyan">Honest Experimental Evaluation</span>
+    </div>
+
+    {% if not benchmark_data %}
+    <div class="alert-callout alert-warning">
+        <span style="font-size: 1.4rem;">⚠️</span>
+        <div>
+            <strong>No comparative benchmark data available yet.</strong><br>
+            Please go to the <a href="/" style="color: inherit; text-decoration: underline;">Dashboard</a> to execute the automated benchmark.
+        </div>
+    </div>
+    {% else %}
+    <!-- Automated Verdict Banner -->
+    <div class="alert-callout alert-info" style="border-left-color: #facc15; background: rgba(250, 204, 21, 0.08);">
+        <span style="font-size: 1.5rem;">🏆</span>
+        <div>
+            <div style="font-size: 0.8rem; text-transform: uppercase; color: #facc15; font-weight: 700;">Automatically Determined Winner:</div>
+            <div style="font-size: 1.15rem; font-weight: 800; color: #ffffff; margin: 0.2rem 0;">
+                {{ benchmark_data.comparison_summary.winner_model }}
+            </div>
+            <div style="font-size: 0.88rem; color: #e2e8f0; line-height: 1.5;">
+                {{ benchmark_data.comparison_summary.scientific_verdict }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Direct Comparison Table -->
+    <div class="panel" style="background: var(--bg-surface-elevated); margin-bottom: 2rem;">
+        <div class="panel-header">
+            <h3 class="panel-title"><span>📊</span> Comprehensive Metrics Comparison Table</h3>
+            <span class="badge badge-safe">Exact Measured Values</span>
+        </div>
+
+        <div class="comparison-table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th style="color: var(--accent-cyan); text-align: right;">Classical Model (Random Forest)</th>
+                        <th style="color: var(--accent-quantum-light); text-align: right;">Quantum Model (PennyLane QSVC)</th>
+                        <th style="text-align: right;">Difference / Advantage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Accuracy</strong></td>
+                        <td class="val-mono" style="text-align: right; color: var(--accent-cyan);">
+                            {{ (benchmark_data.classical.metrics.accuracy * 100) | round(2) }}%
+                        </td>
+                        <td class="val-mono" style="text-align: right; color: var(--accent-quantum-light);">
+                            {{ (benchmark_data.quantum.metrics.accuracy * 100) | round(2) }}%
+                        </td>
+                        <td class="val-mono" style="text-align: right;">
+                            {{ (((benchmark_data.classical.metrics.accuracy - benchmark_data.quantum.metrics.accuracy) * 100) | abs) | round(2) }}%
+                            {% if benchmark_data.classical.metrics.accuracy >= benchmark_data.quantum.metrics.accuracy %}
+                                (Classical +)
+                            {% else %}
+                                (Quantum +)
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Precision</strong></td>
+                        <td class="val-mono" style="text-align: right;">
+                            {{ (benchmark_data.classical.metrics.precision * 100) | round(2) }}%
+                        </td>
+                        <td class="val-mono" style="text-align: right;">
+                            {{ (benchmark_data.quantum.metrics.precision * 100) | round(2) }}%
+                        </td>
+                        <td class="val-mono" style="text-align: right;">
+                            {{ (((benchmark_data.classical.metrics.precision - benchmark_data.quantum.metrics.precision) * 100) | abs) | round(2) }}%
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Recall (Sensitivity)</strong></td>
+                        <td class="val-mono" style="text-align: right;">
+                            {{ (benchmark_data.classical.metrics.recall * 100) | round(2) }}%
+                        </td>
+                        <td class="val-mono" style="text-align: right;">
+                            {{ (benchmark_data.quantum.metrics.recall * 100) | round(2) }}%
+                        </td>
+                        <td class="val-mono" style="text-align: right;">
+                            {{ (((benchmark_data.classical.metrics.recall - benchmark_data.quantum.metrics.recall) * 100) | abs) | round(2) }}%
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>F1-Score</strong></td>
+                        <td class="val-mono" style="text-align: right; font-weight: 800; color: #38bdf8;">
+                            {{ benchmark_data.classical.metrics.f1_score }}
+                        </td>
+                        <td class="val-mono" style="text-align: right; font-weight: 800; color: #c084fc;">
+                            {{ benchmark_data.quantum.metrics.f1_score }}
+                        </td>
+                        <td class="val-mono" style="text-align: right;">
+                            Δ = {{ benchmark_data.comparison_summary.f1_difference }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>ROC-AUC Score</strong></td>
+                        <td class="val-mono" style="text-align: right;">
+                            {{ benchmark_data.classical.metrics.roc_auc | default('N/A') }}
+                        </td>
+                        <td class="val-mono" style="text-align: right;">
+                            {{ benchmark_data.quantum.metrics.roc_auc | default('N/A') }}
+                        </td>
+                        <td class="val-mono" style="text-align: right;">--</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Training Duration</strong></td>
+                        <td class="val-mono" style="text-align: right;">
+                            {{ benchmark_data.classical.metrics.training_time_seconds }} s
+                        </td>
+                        <td class="val-mono" style="text-align: right;">
+                            {{ benchmark_data.quantum.metrics.training_time_seconds }} s
+                        </td>
+                        <td class="val-mono" style="text-align: right; color: var(--status-safe);">
+                            Classical Faster
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Inference Time per Sample</strong></td>
+                        <td class="val-mono" style="text-align: right; color: var(--accent-cyan);">
+                            {{ benchmark_data.classical.metrics.inference_time_ms_per_sample }} ms
+                        </td>
+                        <td class="val-mono" style="text-align: right; color: var(--accent-quantum-light);">
+                            {{ benchmark_data.quantum.metrics.inference_time_ms_per_sample }} ms
+                        </td>
+                        <td class="val-mono" style="text-align: right; color: var(--status-safe);">
+                            {{ benchmark_data.comparison_summary.latency_speedup_classical_x }}x Faster
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Features Used</strong></td>
+                        <td class="val-mono" style="text-align: right;">{{ benchmark_data.classical.features_used }} Features</td>
+                        <td class="val-mono" style="text-align: right;">{{ benchmark_data.quantum.features_used }} Angle Features</td>
+                        <td class="val-mono" style="text-align: right;">PCA Compression</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Quantum Register</strong></td>
+                        <td class="val-mono" style="text-align: right; color: var(--color-text-muted);">N/A</td>
+                        <td class="val-mono" style="text-align: right; color: var(--accent-quantum-light);">
+                            {{ benchmark_data.quantum.n_qubits }} Qubits
+                        </td>
+                        <td class="val-mono" style="text-align: right;">Statevector</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Visual Charts Grid -->
+    <div class="grid-2">
+        <div class="panel">
+            <div class="panel-header">
+                <h3 class="panel-title"><span>📈</span> Accuracy, Precision & F1 Comparison</h3>
+            </div>
+            <div style="height: 320px; position: relative;">
+                <canvas id="comparisonMetricsChart"></canvas>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <h3 class="panel-title"><span>⏱️</span> Execution Latency Benchmark (Log Scale)</h3>
+            </div>
+            <div style="height: 320px; position: relative;">
+                <canvas id="latencyMetricsChart"></canvas>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    window.BENCHMARK_DATA = {{ benchmark_data_json | safe }};
+</script>
+{% endblock %}

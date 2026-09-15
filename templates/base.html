@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Quantum-Inspired Cyber Threat Detection for Digital Signature Security{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <a href="/" class="brand-wrapper">
+            <div class="brand-icon">⚛</div>
+            <div class="brand-text">
+                <h1>QuantumSec Defense</h1>
+                <span>Smart India Hackathon Prototype</span>
+            </div>
+        </a>
+        <nav>
+            <ul class="nav-links">
+                <li class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+                    <a href="/"><span>📊</span> Dashboard</a>
+                </li>
+                <li class="nav-item {% if active_page == 'dataset' %}active{% endif %}">
+                    <a href="/dataset"><span>📁</span> Dataset Studio</a>
+                </li>
+                <li class="nav-item {% if active_page == 'classical' %}active{% endif %}">
+                    <a href="/classical"><span>💻</span> Classical Model</a>
+                </li>
+                <li class="nav-item {% if active_page == 'quantum' %}active{% endif %}">
+                    <a href="/quantum"><span>⚛️</span> Quantum Model</a>
+                </li>
+                <li class="nav-item {% if active_page == 'comparison' %}active{% endif %}">
+                    <a href="/comparison"><span>⚖️</span> Comparison</a>
+                </li>
+                <li class="nav-item {% if active_page == 'threat' %}active{% endif %}">
+                    <a href="/threat-detection"><span>🛡️</span> Live Detection</a>
+                </li>
+                <li class="nav-item {% if active_page == 'scientific' %}active{% endif %}">
+                    <a href="/scientific-report"><span>🔬</span> Scientific Limits</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p><strong>Quantum-Inspired Cyber Threat Detection for Digital Signature Security</strong> | Smart India Hackathon Prototype</p>
+        <p style="margin-top: 0.35rem; opacity: 0.7;">Tested on Authentic Canadian Institute for Cybersecurity (CIC-IDS2017) Data | PennyLane Simulation on Classical Hardware</p>
+    </footer>
+
+    <!-- Main JS -->
+    <script src="/static/js/main.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

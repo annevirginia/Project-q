@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Dataset Studio | CIC-IDS2017 Ingestion & Inspection{% endblock %}
+
+{% block content %}
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h2 class="panel-title"><span>📁</span> CIC-IDS2017 Dataset Studio</h2>
+            <p class="panel-subtitle">Canadian Institute for Cybersecurity benchmark telemetry inspection & preprocessing</p>
+        </div>
+        <span class="badge badge-cyan">Authentic Data</span>
+    </div>
+
+    <!-- Technical Provenance Callout -->
+    <div class="alert-callout alert-info">
+        <span style="font-size: 1.4rem;">ℹ️</span>
+        <div>
+            <strong>Authentic Benchmark Sourcing:</strong><br>
+            The dataset is sourced from the Canadian Institute for Cybersecurity (CIC) at the University of New Brunswick (UNB).
+            It contains 78 network-flow features captured by CICFlowMeter, recording genuine network interactions and real cyber attacks.
+        </div>
+    </div>
+
+    <!-- Dataset Summary Cards -->
+    <div class="grid-cards-4">
+        <div class="metric-card">
+            <div class="metric-header">
+                <span class="metric-title">Active Records</span>
+                <span class="metric-icon">📊</span>
+            </div>
+            <div class="metric-value">{{ stats.num_records | default(0) }}</div>
+            <div class="metric-footer">
+                <span>Total parsed rows</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-header">
+                <span class="metric-title">Flow Features</span>
+                <span class="metric-icon">🔢</span>
+            </div>
+            <div class="metric-value">{{ stats.num_features | default(78) }}</div>
+            <div class="metric-footer">
+                <span>Numeric CICFlowMeter metrics</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-header">
+                <span class="metric-title">Cleaned Missing/Inf</span>
+                <span class="metric-icon">🧹</span>
+            </div>
+            <div class="metric-value" style="color: var(--status-safe);">
+                {{ (stats.missing_values | default(0)) + (stats.infinite_values | default(0)) }}
+            </div>
+            <div class="metric-footer">
+                <span>{{ stats.missing_values | default(0) }} NaNs, {{ stats.infinite_values | default(0) }} Infs handled</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-header">
+                <span class="metric-title">Duplicates Dropped</span>
+                <span class="metric-icon">🗑️</span>
+            </div>
+            <div class="metric-value">{{ stats.duplicate_rows | default(0) }}</div>
+            <div class="metric-footer">
+                <span>Redundant flow records removed</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Class Distribution Section -->
+    <div class="grid-2">
+        <div class="panel" style="margin-bottom: 0;">
+            <div class="panel-header">
+                <h3 class="panel-title"><span>🏷️</span> Class & Attack Distribution</h3>
+                <span class="badge badge-safe">Stratified Breakdown</span>
+            </div>
+            <div class="comparison-table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Attack / Traffic Class</th>
+                            <th>Count</th>
+                            <th>Share</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if stats.class_distribution %}
+                            {% for label, count in stats.class_distribution.items() %}
+                            <tr>
+                                <td>
+                                    <strong>{{ label }}</strong>
+                                    {% if label == "BENIGN" %}
+                                        <span class="badge badge-safe" style="margin-left: 0.5rem;">Normal</span>
+                                    {% else %}
+                                        <span class="badge badge-threat" style="margin-left: 0.5rem;">Malicious</span>
+                                    {% endif %}
+                                </td>
+                                <td class="val-mono">{{ count }}</td>
+                                <td class="val-mono">
+                                    {{ ((count / stats.num_records) * 100) | round(2) }}%
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="3" style="text-align: center; color: var(--color-text-muted);">
+                                    No data loaded. Use the controls below to download or load the dataset.
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Preprocessing Architecture Panel -->
+        <div class="panel" style="margin-bottom: 0;">
+            <div class="panel-header">
+                <h3 class="panel-title"><span>⚙️</span> Preprocessing & Pipeline Integrity</h3>
+                <span class="badge badge-cyan">Zero Data Leakage</span>
+            </div>
+            
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.88rem; color: var(--color-text-secondary);">
+                <li style="display: flex; gap: 0.6rem; align-items: flex-start;">
+                    <span style="color: var(--status-safe);">✓</span>
+                    <div><strong>Whitespace Stripping:</strong> Leading spaces in CICFlowMeter columns (e.g., <code>' Destination Port'</code>) trimmed.</div>
+                </li>
+                <li style="display: flex; gap: 0.6rem; align-items: flex-start;">
+                    <span style="color: var(--status-safe);">✓</span>
+                    <div><strong>Infinite Values Resolution:</strong> Division-by-zero flow rates (<code>Flow Bytes/s</code>) replaced and median-imputed.</div>
+                </li>
+                <li style="display: flex; gap: 0.6rem; align-items: flex-start;">
+                    <span style="color: var(--status-safe);">✓</span>
+                    <div><strong>Stratified Train/Test Split (80/20):</strong> Minorities (SQL Injection, XSS) preserved in both splits.</div>
+                </li>
+                <li style="display: flex; gap: 0.6rem; align-items: flex-start;">
+                    <span style="color: var(--status-safe);">✓</span>
+                    <div><strong>Leakage-Free Scaling:</strong> <code>RobustScaler</code> fitted strictly on <code>X_train</code> and applied to <code>X_test</code>.</div>
+                </li>
+                <li style="display: flex; gap: 0.6rem; align-items: flex-start;">
+                    <span style="color: var(--status-safe);">✓</span>
+                    <div><strong>Quantum Feature Compression:</strong> PCA projects 78 flow features into $N$ principal components, rescaled to $[0, \pi]$ for angle rotation.</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

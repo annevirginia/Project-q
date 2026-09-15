@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}Classical Model Baseline | Random Forest Classifier{% endblock %}
+
+{% block content %}
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h2 class="panel-title"><span>💻</span> Classical Machine Learning Baseline</h2>
+            <p class="panel-subtitle">Random Forest Classifier evaluated on authentic CIC-IDS2017 test set</p>
+        </div>
+        <span class="badge badge-cyan">Classical Computing</span>
+    </div>
+
+    {% if not model_data %}
+    <div class="alert-callout alert-warning">
+        <span style="font-size: 1.4rem;">⚠️</span>
+        <div>
+            <strong>Classical model has not been evaluated yet.</strong><br>
+            Trigger the benchmark from the <a href="/" style="color: inherit; text-decoration: underline;">Dashboard</a> or execute <code>python src/comparison.py</code> in the terminal.
+        </div>
+    </div>
+    {% else %}
+    <!-- Metrics Grid -->
+    <div class="grid-cards-4">
+        <div class="metric-card">
+            <div class="metric-header">
+                <span class="metric-title">Test Accuracy</span>
+                <span class="metric-icon">🎯</span>
+            </div>
+            <div class="metric-value" style="color: var(--accent-cyan);">
+                {{ (model_data.metrics.accuracy * 100) | round(2) }}%
+            </div>
+            <div class="metric-footer">
+                <span>Evaluated on {{ model_data.metrics.test_samples }} held-out test flows</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-header">
+                <span class="metric-title">Precision</span>
+                <span class="metric-icon">🔍</span>
+            </div>
+            <div class="metric-value">
+                {{ (model_data.metrics.precision * 100) | round(2) }}%
+            </div>
+            <div class="metric-footer">
+                <span>Threat prediction precision</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-header">
+                <span class="metric-title">Recall</span>
+                <span class="metric-icon">📡</span>
+            </div>
+            <div class="metric-value">
+                {{ (model_data.metrics.recall * 100) | round(2) }}%
+            </div>
+            <div class="metric-footer">
+                <span>Threat detection sensitivity</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-header">
+                <span class="metric-title">F1-Score</span>
+                <span class="metric-icon">⚡</span>
+            </div>
+            <div class="metric-value" style="color: var(--status-safe);">
+                {{ model_data.metrics.f1_score }}
+            </div>
+            <div class="metric-footer">
+                <span>Harmonic balance</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Grid -->
+    <div class="grid-2">
+        <!-- Left: Confusion Matrix -->
+        <div class="panel" style="margin-bottom: 0;">
+            <div class="panel-header">
+                <h3 class="panel-title"><span>📊</span> Confusion Matrix</h3>
+                <span class="badge badge-safe">Actual vs Predicted</span>
+            </div>
+            
+            <div class="comparison-table-wrapper">
+                <table class="data-table" style="text-align: center;">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th style="text-align: center;">Predicted Normal (0)</th>
+                            <th style="text-align: center;">Predicted Threat (1)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 700; text-align: left;">Actual Normal (0)</td>
+                            <td class="val-mono" style="color: var(--status-safe); font-size: 1.1rem;">
+                                {{ model_data.metrics.confusion_matrix.true_negative }} (TN)
+                            </td>
+                            <td class="val-mono" style="color: var(--status-warning); font-size: 1.1rem;">
+                                {{ model_data.metrics.confusion_matrix.false_positive }} (FP)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 700; text-align: left;">Actual Threat (1)</td>
+                            <td class="val-mono" style="color: var(--status-threat); font-size: 1.1rem;">
+                                {{ model_data.metrics.confusion_matrix.false_negative }} (FN)
+                            </td>
+                            <td class="val-mono" style="color: var(--status-safe); font-size: 1.1rem;">
+                                {{ model_data.metrics.confusion_matrix.true_positive }} (TP)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div style="flex: 1; background: var(--bg-surface-elevated); padding: 0.85rem; border-radius: var(--radius-sm);">
+                    <div style="font-size: 0.75rem; color: var(--color-text-secondary); text-transform: uppercase;">Training Duration</div>
+                    <div class="val-mono" style="font-size: 1.15rem; color: var(--color-text-primary);">
+                        {{ model_data.metrics.training_time_seconds }}s
+                    </div>
+                </div>
+                <div style="flex: 1; background: var(--bg-surface-elevated); padding: 0.85rem; border-radius: var(--radius-sm);">
+                    <div style="font-size: 0.75rem; color: var(--color-text-secondary); text-transform: uppercase;">Inference Latency</div>
+                    <div class="val-mono" style="font-size: 1.15rem; color: var(--accent-cyan);">
+                        {{ model_data.metrics.inference_time_ms_per_sample }} ms/sample
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Classification Report & Specifications -->
+        <div class="panel" style="margin-bottom: 0;">
+            <div class="panel-header">
+                <h3 class="panel-title"><span>📋</span> Model Hyperparameters & Architecture</h3>
+                <span class="badge badge-cyan">Scikit-Learn</span>
+            </div>
+
+            <div class="comparison-table-wrapper">
+                <table class="data-table">
+                    <tbody>
+                        <tr>
+                            <td><strong>Model Architecture</strong></td>
+                            <td>Random Forest Classifier (Ensemble Trees)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Number of Estimators</strong></td>
+                            <td class="val-mono">100 Trees</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Max Depth Constraint</strong></td>
+                            <td class="val-mono">12 Levels (Regularized)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Class Weight Strategy</strong></td>
+                            <td class="val-mono">Balanced (Inverse Frequency)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Input Dimension</strong></td>
+                            <td class="val-mono">{{ model_data.features_used }} Features</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ROC-AUC Score</strong></td>
+                            <td class="val-mono" style="color: var(--accent-cyan);">
+                                {{ model_data.metrics.roc_auc | default('N/A') }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 1.25rem; font-size: 0.85rem; color: var(--color-text-muted);">
+                Classical ensemble models utilize multi-threaded CPU parallelization (<code>n_jobs=-1</code>) enabling rapid sub-millisecond classification across high-dimensional packet flows.
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

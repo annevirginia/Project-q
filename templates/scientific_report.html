@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Scientific Honesty & Hardware Roadmap | Research Limitations{% endblock %}
+
+{% block content %}
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h2 class="panel-title"><span>🔬</span> Scientific Honesty, Limitations & Quantum Hardware Roadmap</h2>
+            <p class="panel-subtitle">Transparent academic disclosure for Smart India Hackathon jury review</p>
+        </div>
+        <span class="badge badge-safe">Peer-Reviewed Integrity</span>
+    </div>
+
+    <!-- Core Tenet Alert -->
+    <div class="alert-callout alert-info">
+        <span style="font-size: 1.5rem;">📜</span>
+        <div>
+            <strong>Core Scientific Tenet of this Project:</strong><br>
+            We do NOT claim artificial "quantum superiority." Quantum computing is not magically faster for all problems.
+            In current NISQ-era simulation, classical decision tree ensembles (Random Forest) run orders of magnitude faster and achieve comparable or superior F1-scores on tabular network flow data.
+            Our prototype provides an honest, empirical comparison based on genuine algorithmic execution.
+        </div>
+    </div>
+
+    <!-- 5-Tier Scientific Demarcation Grid -->
+    <div class="grid-2">
+        <!-- Tier 1: Actually Implemented -->
+        <div class="panel" style="background: var(--bg-surface-elevated); margin-bottom: 1.5rem; border-left: 4px solid var(--status-safe);">
+            <h3 style="font-size: 1.1rem; color: var(--status-safe); margin-bottom: 0.75rem;">
+                <span>✓</span> 1. What is Actually Implemented
+            </h3>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.88rem; color: var(--color-text-secondary);">
+                <li>• Ingestion, cleaning (inf/NaN handling, deduplication) of authentic CIC-IDS2017 network traffic CSVs.</li>
+                <li>• Leakage-free preprocessing: Scalers, PCA, and MinMax feature transforms fitted strictly on train sets.</li>
+                <li>• Full-scale classical Random Forest baseline with real training and inference timing.</li>
+                <li>• Genuine PennyLane quantum circuits with angle encoding and CNOT entangling ladders.</li>
+                <li>• Quantum statevector computation and exact quantum kernel matrix evaluation.</li>
+                <li>• 3-party Bell-state quantum digital signature density matrix simulation with depolarizing Pauli noise.</li>
+            </ul>
+        </div>
+
+        <!-- Tier 2: Experimentally Demonstrated -->
+        <div class="panel" style="background: var(--bg-surface-elevated); margin-bottom: 1.5rem; border-left: 4px solid var(--accent-cyan);">
+            <h3 style="font-size: 1.1rem; color: var(--accent-cyan); margin-bottom: 0.75rem;">
+                <span>📊</span> 2. What is Experimentally Demonstrated
+            </h3>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.88rem; color: var(--color-text-secondary);">
+                <li>• Side-by-side accuracy, precision, recall, F1, and confusion matrices on identical train/test splits.</li>
+                <li>• Exponential simulation overhead: Classical microsecond latency vs quantum millisecond simulation latency.</li>
+                <li>• Compression of 78 network features down to 4 orthogonal quantum rotation angles via PCA.</li>
+                <li>• Quantum Bit Error Rate (QBER) and state fidelity degradation under cyber threat attack vectors.</li>
+            </ul>
+        </div>
+
+        <!-- Tier 3: Simulated vs Real Quantum Hardware -->
+        <div class="panel" style="background: var(--bg-surface-elevated); margin-bottom: 1.5rem; border-left: 4px solid var(--accent-quantum-light);">
+            <h3 style="font-size: 1.1rem; color: var(--accent-quantum-light); margin-bottom: 0.75rem;">
+                <span>⚛️</span> 3. What is Simulated (Classical CPU Execution)
+            </h3>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.88rem; color: var(--color-text-secondary);">
+                <li>• The quantum model runs on PennyLane's <code>default.qubit</code> simulator on an x86 Intel/AMD CPU.</li>
+                <li>• Statevectors of length $2^N$ (16 complex amplitudes for 4 qubits) are stored in standard classical RAM.</li>
+                <li>• No real quantum computer was used for these runs, eliminating queue times and NISQ thermal decoherence noise.</li>
+                <li>• <em>Simulation on classical CPUs provides zero physical quantum speedup.</em></li>
+            </ul>
+        </div>
+
+        <!-- Tier 4: Conceptual & Future Work -->
+        <div class="panel" style="background: var(--bg-surface-elevated); margin-bottom: 1.5rem; border-left: 4px solid var(--status-warning);">
+            <h3 style="font-size: 1.1rem; color: var(--status-warning); margin-bottom: 0.75rem;">
+                <span>🚀</span> 4. Conceptual & Future Hardware Roadmap
+            </h3>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.88rem; color: var(--color-text-secondary);">
+                <li>• Execution on physical cloud QPUs (e.g. IBM Quantum Eagle/Heron or IonQ Forte) via Qiskit Runtime.</li>
+                <li>• Error mitigation techniques (Zero-Noise Extrapolation, Readout Error Mitigation) for physical quantum hardware.</li>
+                <li>• Fiber-optic Quantum Key Distribution (QKD) links transmitting entangled Bell photon pairs for hardware QDS.</li>
+                <li>• Quantum RAM (QRAM) architectures for $O(\log N)$ state preparation of large cybersecurity databases.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Digital Signature Clarification Panel -->
+    <div class="panel" style="background: var(--bg-surface-elevated); border-left: 4px solid #f43f5e;">
+        <h3 style="font-size: 1.1rem; color: #f43f5e; margin-bottom: 0.75rem;">
+            <span>⚠️</span> Dataset-Level Intrusion vs Digital Signature Threat Mapping
+        </h3>
+        <p style="font-size: 0.88rem; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 0.75rem;">
+            The Canadian Institute for Cybersecurity (CIC-IDS2017) dataset contains network-flow records (packet counts, durations, flags, inter-arrival times) with attack labels such as <code>Web Attack – Brute Force</code>, <code>Web Attack – Sql Injection</code>, <code>Web Attack – XSS</code>, and <code>PortScan</code>.
+        </p>
+        <p style="font-size: 0.88rem; color: var(--color-text-secondary); line-height: 1.6;">
+            The dataset does <strong>NOT</strong> contain cryptographic digital signature bytes directly. In modern enterprise IT, digital signature authorities (PKI signing servers, HSMs, OCSP responders) operate as network services. Our prototype establishes a technically sound application-layer bridge: network intrusions targeting signing APIs are classified, and their estimated threat probability is fed into the quantum digital signature verification logic to simulate defense against unauthorized impersonation and key tampering.
+        </p>
+    </div>
+</div>
+{% endblock %}
