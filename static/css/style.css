@@ -768,6 +768,7 @@ select.form-control {
   font-size: 0.85rem;
   color: var(--neon-yellow);
   cursor: pointer;
+  -webkit-user-select: none;
   user-select: none;
 }
 
