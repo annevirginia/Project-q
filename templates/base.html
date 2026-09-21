@@ -10,42 +10,34 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/static/css/style.css">
     {% block head %}{% endblock %}
 </head>
 <body>
-    <!-- Top Navigation Bar -->
     <header class="navbar">
         <a href="/" class="brand-wrapper">
             <div class="brand-icon">⚛</div>
             <div class="brand-text">
                 <h1>QuantumSec Defense</h1>
-                <span>Smart India Hackathon Prototype</span>
+                <span>Digital Signature Security Platform</span>
             </div>
         </a>
-        <nav>
+        <nav aria-label="Main Navigation">
             <ul class="nav-links">
-                <li class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
-                    <a href="/"><span>📊</span> Dashboard</a>
+                <li class="nav-item">
+                    <a href="/#comparison"><span>⚖️</span> Classical vs Quantum</a>
                 </li>
-                <li class="nav-item {% if active_page == 'dataset' %}active{% endif %}">
-                    <a href="/dataset"><span>📁</span> Dataset Studio</a>
+                <li class="nav-item">
+                    <a href="/#crypto"><span>🔐</span> Crypto Toolkit</a>
                 </li>
-                <li class="nav-item {% if active_page == 'classical' %}active{% endif %}">
-                    <a href="/classical"><span>💻</span> Classical Model</a>
+                <li class="nav-item">
+                    <a href="/#threat"><span>🛡️</span> Live Console</a>
                 </li>
-                <li class="nav-item {% if active_page == 'quantum' %}active{% endif %}">
-                    <a href="/quantum"><span>⚛️</span> Quantum Model</a>
-                </li>
-                <li class="nav-item {% if active_page == 'comparison' %}active{% endif %}">
-                    <a href="/comparison"><span>⚖️</span> Comparison</a>
-                </li>
-                <li class="nav-item {% if active_page == 'threat' %}active{% endif %}">
-                    <a href="/threat-detection"><span>🛡️</span> Live Detection</a>
-                </li>
-                <li class="nav-item {% if active_page == 'scientific' %}active{% endif %}">
-                    <a href="/scientific-report"><span>🔬</span> Scientific Limits</a>
+                <li class="nav-item">
+                    <a href="/#metrics"><span>📊</span> Dataset &amp; Metrics</a>
                 </li>
             </ul>
         </nav>
@@ -59,7 +51,7 @@
     <!-- Footer -->
     <footer class="footer">
         <p><strong>Quantum-Inspired Cyber Threat Detection for Digital Signature Security</strong> | Smart India Hackathon Prototype</p>
-        <p style="margin-top: 0.35rem; opacity: 0.7;">Tested on Authentic Canadian Institute for Cybersecurity (CIC-IDS2017) Data | PennyLane Simulation on Classical Hardware</p>
+        <p class="footer-sub">Tested on Authentic CIC-IDS2017 Data | PennyLane, Qiskit & Aer Simulation on Classical Hardware | Flask & scikit-learn | Plotly & Chart.js</p>
     </footer>
 
     <!-- Main JS -->

@@ -54,6 +54,27 @@ class DigitalSignatureThreatMapper:
             "impact": "Port scanning probing Certificate Revocation and Timestamping servers for vulnerabilities.",
             "severity": "Medium",
             "base_disturbance": 0.40
+        },
+        "Replay Attack": {
+            "category": "Session Replay & Nonce Bypass",
+            "threat_type": "Replayed Signature Transaction",
+            "impact": "Captured and replayed legitimate signing session tokens to authorize duplicate transactions without fresh authentication.",
+            "severity": "High",
+            "base_disturbance": 0.50
+        },
+        "Forgery Attack": {
+            "category": "Certificate Forgery & PKI Spoofing",
+            "threat_type": "Forged Digital Certificate",
+            "impact": "Crafted fraudulent X.509 certificates or manipulated certificate chain validation to bypass trust anchors.",
+            "severity": "Critical",
+            "base_disturbance": 0.75
+        },
+        "Impersonation Attack": {
+            "category": "Identity Spoofing & Credential Theft",
+            "threat_type": "Signer Identity Impersonation",
+            "impact": "Assumed the identity of an authorized signer using stolen credentials or spoofed authentication tokens.",
+            "severity": "Critical",
+            "base_disturbance": 0.70
         }
     }
 
@@ -73,6 +94,12 @@ class DigitalSignatureThreatMapper:
                     label_match = "Web Attack - XSS"
                 elif "port" in lbl_lower:
                     label_match = "PortScan"
+                elif "replay" in lbl_lower:
+                    label_match = "Replay Attack"
+                elif "forgery" in lbl_lower or "forg" in lbl_lower:
+                    label_match = "Forgery Attack"
+                elif "impersonat" in lbl_lower or "spoof" in lbl_lower:
+                    label_match = "Impersonation Attack"
                 elif "brute" in lbl_lower or "attack" in lbl_lower:
                     label_match = "Web Attack - Brute Force"
             

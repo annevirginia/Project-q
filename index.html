@@ -1,1244 +1,673 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantum-Inspired Cyber Threat Detection for Digital Signature Security | SIH Prototype</title>
-    <meta name="description" content="End-to-end research prototype benchmarking Classical ML (Random Forest) vs Quantum ML (PennyLane QSVC) on authentic CIC-IDS2017 network flow data, bridged to Quantum Digital Signature Bell-state security verification.">
-    
-    <!-- Google Fonts -->
+    <title>QuantumSec Defense</title>
+    <meta name="description"
+        content="Quantum-Inspired Cyber Threat Detection for Digital Signature Security — PennyLane, Qiskit, Aer, scikit-learn, Flask, Plotly, Chart.js.">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    
-    <style>
-        :root {
-            --bg-main: #070b14;
-            --bg-surface: #0f172a;
-            --bg-surface-elevated: #1e293b;
-            --bg-surface-glass: rgba(15, 23, 42, 0.85);
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --border-focus: rgba(0, 242, 254, 0.5);
-            
-            --color-text-primary: #f8fafc;
-            --color-text-secondary: #94a3b8;
-            --color-text-muted: #64748b;
-            
-            --accent-cyan: #00f2fe;
-            --accent-cyan-glow: rgba(0, 242, 254, 0.3);
-            --accent-quantum: #9333ea;
-            --accent-quantum-light: #c084fc;
-            --accent-quantum-glow: rgba(147, 51, 234, 0.3);
-            
-            --status-safe: #10b981;
-            --status-safe-bg: rgba(16, 185, 129, 0.14);
-            --status-threat: #f43f5e;
-            --status-threat-bg: rgba(244, 63, 94, 0.16);
-            --status-warning: #f59e0b;
-            --status-warning-bg: rgba(245, 158, 11, 0.14);
-            
-            --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
-            
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 18px;
-            --radius-full: 9999px;
-            
-            --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
-            --shadow-glow-cyan: 0 0 25px rgba(0, 242, 254, 0.25);
-            --shadow-glow-quantum: 0 0 25px rgba(147, 51, 234, 0.25);
-        }
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    <!-- Visualization Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 
-        body {
-            background-color: var(--bg-main);
-            color: var(--color-text-primary);
-            font-family: var(--font-sans);
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(at 10% 10%, rgba(0, 242, 254, 0.06) 0px, transparent 50%),
-                radial-gradient(at 90% 90%, rgba(147, 51, 234, 0.08) 0px, transparent 50%);
-        }
-
-        /* Top Navigation Bar */
-        .navbar {
-            background: var(--bg-surface-glass);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border-subtle);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            padding: 0.85rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .brand-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 0.85rem;
-            text-decoration: none;
-            color: inherit;
-            cursor: pointer;
-        }
-
-        .brand-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: var(--radius-md);
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-quantum));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.35rem;
-            box-shadow: var(--shadow-glow-cyan);
-        }
-
-        .brand-text h1 {
-            font-size: 1.18rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        .brand-text span {
-            font-size: 0.76rem;
-            color: var(--color-text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .nav-tabs-wrapper {
-            display: flex;
-            gap: 0.35rem;
-            background: rgba(0, 0, 0, 0.35);
-            padding: 0.35rem;
-            border-radius: var(--radius-full);
-            border: 1px solid var(--border-subtle);
-            overflow-x: auto;
-            max-width: 100%;
-        }
-
-        .tab-btn {
-            background: transparent;
-            border: none;
-            color: var(--color-text-secondary);
-            padding: 0.5rem 1.1rem;
-            border-radius: var(--radius-full);
-            font-family: var(--font-sans);
-            font-size: 0.84rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .tab-btn:hover {
-            color: var(--color-text-primary);
-            background: rgba(255, 255, 255, 0.06);
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(147, 51, 234, 0.25));
-            color: var(--accent-cyan);
-            border: 1px solid rgba(0, 242, 254, 0.35);
-            box-shadow: var(--shadow-glow-cyan);
-        }
-
-        .system-pulse {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.8rem;
-            font-family: var(--font-mono);
-            color: var(--status-safe);
-            background: var(--status-safe-bg);
-            padding: 0.4rem 0.85rem;
-            border-radius: var(--radius-full);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-
-        .pulse-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--status-safe);
-            box-shadow: 0 0 10px var(--status-safe);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 0.8; }
-            50% { transform: scale(1.3); opacity: 1; }
-            100% { transform: scale(0.95); opacity: 0.8; }
-        }
-
-        /* Container */
-        .container {
-            max-width: 1380px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem 4rem;
-            width: 100%;
-            flex: 1;
-        }
-
-        /* Tab Content Panels */
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease forwards;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Hero Banner */
-        .hero-banner {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.8));
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
-            padding: 2.25rem 2.5rem;
-            margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-card);
-        }
-
-        .hero-banner::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 350px;
-            height: 350px;
-            background: radial-gradient(circle, var(--accent-cyan-glow) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .hero-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.3rem 0.8rem;
-            border-radius: var(--radius-full);
-            background: var(--accent-cyan-glow);
-            color: var(--accent-cyan);
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            margin-bottom: 0.9rem;
-            border: 1px solid rgba(0, 242, 254, 0.3);
-        }
-
-        .hero-title {
-            font-size: 2rem;
-            font-weight: 800;
-            line-height: 1.25;
-            letter-spacing: -0.03em;
-            margin-bottom: 0.75rem;
-            background: linear-gradient(135deg, #ffffff 40%, var(--accent-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-subtitle {
-            color: var(--color-text-secondary);
-            font-size: 1rem;
-            max-width: 900px;
-            line-height: 1.6;
-        }
-
-        /* Panels & Cards */
-        .panel {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            padding: 1.6rem;
-            margin-bottom: 1.75rem;
-            box-shadow: var(--shadow-card);
-        }
-
-        .panel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.25rem;
-            border-bottom: 1px solid var(--border-subtle);
-            padding-bottom: 0.85rem;
-        }
-
-        .panel-title {
-            font-size: 1.22rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .panel-subtitle {
-            font-size: 0.84rem;
-            color: var(--color-text-muted);
-            margin-top: 0.2rem;
-        }
-
-        /* Metric Grids */
-        .grid-cards-4 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.25rem;
-            margin-bottom: 1.75rem;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 1.75rem;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.25rem;
-            margin-bottom: 1.75rem;
-        }
-
-        .metric-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            padding: 1.35rem;
-            position: relative;
-            box-shadow: var(--shadow-card);
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-
-        .metric-card:hover {
-            transform: translateY(-2px);
-            border-color: rgba(255, 255, 255, 0.16);
-        }
-
-        .metric-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 0.65rem;
-        }
-
-        .metric-title {
-            font-size: 0.82rem;
-            color: var(--color-text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: 600;
-        }
-
-        .metric-icon {
-            font-size: 1.2rem;
-        }
-
-        .metric-value {
-            font-size: 2rem;
-            font-weight: 800;
-            font-family: var(--font-mono);
-            letter-spacing: -0.03em;
-            margin-bottom: 0.4rem;
-        }
-
-        .metric-footer {
-            font-size: 0.78rem;
-            color: var(--color-text-muted);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        /* Badges */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            padding: 0.25rem 0.65rem;
-            border-radius: var(--radius-full);
-            font-size: 0.74rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-
-        .badge-cyan { background: var(--accent-cyan-glow); color: var(--accent-cyan); border: 1px solid rgba(0, 242, 254, 0.3); }
-        .badge-quantum { background: var(--accent-quantum-glow); color: var(--accent-quantum-light); border: 1px solid rgba(147, 51, 234, 0.3); }
-        .badge-safe { background: var(--status-safe-bg); color: var(--status-safe); border: 1px solid rgba(16, 185, 129, 0.3); }
-        .badge-threat { background: var(--status-threat-bg); color: var(--status-threat); border: 1px solid rgba(244, 63, 94, 0.3); }
-        .badge-warning { background: var(--status-warning-bg); color: var(--status-warning); border: 1px solid rgba(245, 158, 11, 0.3); }
-
-        /* Tables */
-        .comparison-table-wrapper {
-            overflow-x: auto;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-subtle);
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.88rem;
-        }
-
-        .data-table th, .data-table td {
-            padding: 0.9rem 1.1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .data-table th {
-            background: var(--bg-surface-elevated);
-            color: var(--color-text-secondary);
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.76rem;
-            letter-spacing: 0.05em;
-        }
-
-        .data-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .data-table tr:hover td {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .val-mono {
-            font-family: var(--font-mono);
-            font-weight: 600;
-        }
-
-        /* Callouts */
-        .alert-callout {
-            display: flex;
-            gap: 1rem;
-            padding: 1.25rem 1.4rem;
-            border-radius: var(--radius-md);
-            margin-bottom: 1.75rem;
-            font-size: 0.88rem;
-            line-height: 1.55;
-            border: 1px solid;
-        }
-
-        .alert-warning {
-            background: var(--status-warning-bg);
-            border-color: rgba(245, 158, 11, 0.35);
-            color: #fef3c7;
-        }
-
-        .alert-info {
-            background: rgba(0, 242, 254, 0.08);
-            border-color: rgba(0, 242, 254, 0.3);
-            color: #e0f2fe;
-        }
-
-        /* Forms & Inputs */
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: var(--color-text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.45rem;
-        }
-
-        .form-control {
-            width: 100%;
-            background: var(--bg-surface-elevated);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-sm);
-            color: var(--color-text-primary);
-            padding: 0.75rem 1rem;
-            font-family: var(--font-sans);
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 0 3px var(--accent-cyan-glow);
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.6rem;
-            border-radius: var(--radius-sm);
-            font-family: var(--font-sans);
-            font-size: 0.9rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            text-decoration: none;
-            border: none;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
-            color: #070b14;
-            box-shadow: var(--shadow-glow-cyan);
-        }
-
-        .btn-primary:hover {
-            filter: brightness(1.1);
-            transform: translateY(-1px);
-        }
-
-        .btn-quantum {
-            background: linear-gradient(135deg, var(--accent-quantum), #7c3aed);
-            color: #ffffff;
-            box-shadow: var(--shadow-glow-quantum);
-        }
-
-        .btn-quantum:hover {
-            filter: brightness(1.15);
-            transform: translateY(-1px);
-        }
-
-        /* ASCII Circuit Viewer */
-        .circuit-ascii-box {
-            background: #020617;
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            padding: 1.25rem 1.5rem;
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            color: var(--accent-cyan);
-            overflow-x: auto;
-            white-space: pre;
-            line-height: 1.7;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.7);
-        }
-
-        /* Chart Containers */
-        .chart-container {
-            position: relative;
-            height: 320px;
-            width: 100%;
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--bg-surface);
-            border-top: 1px solid var(--border-subtle);
-            padding: 1.75rem 2rem;
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--color-text-muted);
-            margin-top: auto;
-        }
-
-        @media (max-width: 900px) {
-            .navbar { flex-direction: column; gap: 1rem; padding: 1rem; }
-            .nav-tabs-wrapper { width: 100%; justify-content: flex-start; }
-            .grid-2 { grid-template-columns: 1fr; }
-            .hero-title { font-size: 1.5rem; }
-        }
-    </style>
+    <!-- Custom Cyberpunk Design System -->
+    <link rel="stylesheet" href="static/css/style.css">
 </head>
-<body>
 
-    <!-- Top Navigation Bar -->
+<body>
+    <!-- Top Cyberpunk Navigation -->
     <header class="navbar">
-        <div class="brand-wrapper" onclick="switchTab('overview')">
+        <a href="#dashboard" class="brand-wrapper" title="QuantumSec Defense Home">
             <div class="brand-icon">⚛</div>
             <div class="brand-text">
                 <h1>QuantumSec Defense</h1>
-                <span>Smart India Hackathon Prototype</span>
+                <span>Cyberpunk Security Console</span>
             </div>
-        </div>
-
-        <!-- Navigation Tabs -->
-        <nav class="nav-tabs-wrapper">
-            <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview')">
-                <span>📊</span> Overview
-            </button>
-            <button class="tab-btn" data-tab="dataset" onclick="switchTab('dataset')">
-                <span>📁</span> Dataset Studio
-            </button>
-            <button class="tab-btn" data-tab="classical" onclick="switchTab('classical')">
-                <span>💻</span> Classical ML
-            </button>
-            <button class="tab-btn" data-tab="quantum" onclick="switchTab('quantum')">
-                <span>⚛️</span> Quantum ML
-            </button>
-            <button class="tab-btn" data-tab="comparison" onclick="switchTab('comparison')">
-                <span>⚖️</span> Head-to-Head
-            </button>
-            <button class="tab-btn" data-tab="threat" onclick="switchTab('threat')">
-                <span>🛡️</span> Live Console
-            </button>
-            <button class="tab-btn" data-tab="scientific" onclick="switchTab('scientific')">
-                <span>🔬</span> Scientific Limits
-            </button>
+        </a>
+        <nav aria-label="Main Navigation">
+            <ul class="nav-links">
+                <li class="nav-item"><a href="#comparison" title="Classical vs Quantum Benchmarks"><span>⚖️</span>
+                        Classical vs Quantum</a></li>
+                <li class="nav-item"><a href="#crypto" title="Digital Signature Toolkit"><span>🔐</span> Crypto
+                        Toolkit</a></li>
+                <li class="nav-item"><a href="#threat" title="Live Cyber Threat Console"><span>🛡️</span> Live
+                        Console</a></li>
+                <li class="nav-item"><a href="#metrics" title="Dataset Telemetry &amp; Threat Mapping"><span>📊</span>
+                        Dataset &amp; Metrics</a></li>
+            </ul>
         </nav>
-
-        <!-- System Pulse -->
-        <div class="system-pulse" id="systemStatusBadge">
-            <div class="pulse-dot"></div>
-            <span id="systemStatusText">Quantum Simulator Ready</span>
-        </div>
     </header>
+
+    <!-- Cyberpunk Stack Banner -->
+    <div class="stack-banner">
+        <span class="stack-chip stack-chip-cyan">💻 Backend: Python &amp; Flask</span>
+        <span class="stack-chip stack-chip-green">🌲 Classical ML: scikit-learn (Random Forest)</span>
+        <span class="stack-chip stack-chip-pink">⚛️ Quantum: PennyLane, Qiskit &amp; Aer</span>
+        <span class="stack-chip stack-chip-yellow">📊 Viz: Plotly &amp; Chart.js</span>
+        <span class="stack-chip stack-chip-purple">🔐 Cryptography: RSA-2048 &amp; Bell-State QDS</span>
+        <span class="stack-chip stack-chip-pink">🎯 7 Threat Vectors</span>
+    </div>
 
     <!-- Main Container -->
     <main class="container">
-
-        <!-- ================================================================= -->
-        <!-- TAB 1: EXECUTIVE OVERVIEW                                         -->
-        <!-- ================================================================= -->
-        <section id="tab-overview" class="tab-content active">
-            <!-- Hero Banner -->
+        <!-- ═══ SECTION 1: HERO & DASHBOARD METRICS ═══ -->
+        <section id="dashboard">
             <div class="hero-banner">
-                <div class="hero-tag">⚛️ SIH Innovation Prototype</div>
-                <h2 class="hero-title">Quantum-Inspired Threat Detection & Digital Signature Defense</h2>
+                <div class="hero-tag">⚛️ SIH Cyber-Innovation Prototype</div>
+                <h2 class="hero-title">Quantum-Inspired Threat Detection &amp; Digital Signature Defense</h2>
                 <p class="hero-subtitle">
-                    A reproducible research prototype benchmarking <strong>Classical Machine Learning (Random Forest)</strong> against <strong>Quantum Machine Learning (PennyLane Quantum Kernel & VQC)</strong> on authentic <strong>Canadian Institute for Cybersecurity (CIC-IDS2017)</strong> telemetry, connected to a <strong>Quantum Digital Signature (QDS)</strong> Bell-state entanglement security verification engine.
+                    Benchmarking <strong>Classical ML (scikit-learn Random Forest)</strong> against
+                    genuine <strong>Quantum ML (PennyLane QSVC + Qiskit Aer)</strong> on authentic
+                    <strong>CIC-IDS2017</strong> telemetry — with hardware-accelerated RSA-2048 cryptographic tools,
+                    X.509 certificate generator, QKD BB84 simulator, and 7 attack classifications including Replay,
+                    Forgery &amp; Impersonation.
                 </p>
             </div>
 
-            <!-- Key Metrics Grid -->
             <div class="grid-cards-4">
                 <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-title">Dataset Status</span>
-                        <span class="metric-icon">📁</span>
-                    </div>
-                    <div class="metric-value" style="color: var(--accent-cyan);">2,999</div>
-                    <div class="metric-footer">
-                        <span class="badge badge-cyan">CIC-IDS2017</span>
-                        <span>78 Flow Features</span>
-                    </div>
+                    <div class="metric-header"><span class="metric-title">CIC-IDS2017 Telemetry</span><span
+                            class="metric-icon">📁</span></div>
+                    <div class="metric-value">5,104</div>
+                    <div class="metric-footer"><span class="badge badge-cyan">Authentic Telemetry</span><span>78
+                            Features</span></div>
                 </div>
-
                 <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-title">Classical (Random Forest)</span>
-                        <span class="metric-icon">💻</span>
-                    </div>
-                    <div class="metric-value" style="color: var(--status-safe);">99.67%</div>
-                    <div class="metric-footer">
-                        <span class="badge badge-safe">F1: 0.9286</span>
-                        <span>0.092 ms Latency</span>
-                    </div>
+                    <div class="metric-header"><span class="metric-title">Classical ML (RF)</span><span
+                            class="metric-icon">💻</span></div>
+                    <div class="metric-value">99.67%</div>
+                    <div class="metric-footer"><span class="badge badge-safe">F1: 0.9286</span><span>0.092 ms /
+                            sample</span></div>
                 </div>
-
                 <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-title">Quantum (PennyLane QSVC)</span>
-                        <span class="metric-icon">⚛️</span>
-                    </div>
-                    <div class="metric-value" style="color: var(--accent-quantum-light);">6.25%</div>
-                    <div class="metric-footer">
-                        <span class="badge badge-quantum">4 Qubits</span>
-                        <span>F1: 0.0506</span>
+                    <div class="metric-header"><span class="metric-title">Quantum ML (QSVC)</span><span
+                            class="metric-icon">⚛️</span></div>
+                    <div class="metric-value">6.25%</div>
+                    <div class="metric-footer"><span class="badge badge-quantum">4 Qubits</span><span>F1: 0.0506</span>
                     </div>
                 </div>
-
                 <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-title">Benchmark Winner</span>
-                        <span class="metric-icon">🏆</span>
-                    </div>
-                    <div class="metric-value" style="font-size: 1.15rem; color: #facc15;">Random Forest</div>
-                    <div class="metric-footer">
-                        <span class="badge badge-cyan">14,500x Faster</span>
-                        <span>F1 Advantage: +0.878</span>
-                    </div>
+                    <div class="metric-header"><span class="metric-title">Attack Classifications</span><span
+                            class="metric-icon">🎯</span></div>
+                    <div class="metric-value">7 Vectors</div>
+                    <div class="metric-footer"><span class="badge badge-warning">Multi-Class</span><span>Replay, Forgery
+                            &amp; Impersonation</span></div>
                 </div>
-            </div>
-
-            <!-- Architecture & Digital Signature Bridge -->
-            <div class="grid-2">
-                <div class="panel">
-                    <div class="panel-header">
-                        <div>
-                            <h3 class="panel-title"><span>🛡️</span> Digital Signature Security Bridge</h3>
-                            <p class="panel-subtitle">Coupling network threat scoring to Quantum Digital Signature entanglement</p>
-                        </div>
-                        <span class="badge badge-safe">Operational PKI</span>
-                    </div>
-                    <p style="color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: 1.2rem;">
-                        Enterprise digital signatures rely on network-accessible APIs (OCSP revocation responders, CA signing services, and timestamp authorities). The system translates network intrusions into digital signature vulnerability vectors:
-                    </p>
-                    <div style="display: flex; flex-direction: column; gap: 0.85rem;">
-                        <div style="background: var(--bg-surface-elevated); padding: 0.9rem 1.1rem; border-radius: var(--radius-sm); border-left: 3px solid var(--status-threat);">
-                            <strong style="color: #f87171; font-size: 0.88rem;">Brute Force Attacks &rarr; Adversarial Impersonation</strong>
-                            <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-top: 0.2rem;">Credential stuffing against signing portals aimed at forging unauthorized document approvals.</p>
-                        </div>
-                        <div style="background: var(--bg-surface-elevated); padding: 0.9rem 1.1rem; border-radius: var(--radius-sm); border-left: 3px solid #f59e0b;">
-                            <strong style="color: #fbbf24; font-size: 0.88rem;">SQL Injection &rarr; Public-Key & Trust Manipulation</strong>
-                            <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-top: 0.2rem;">Payloads targeting certificate database tables or tampering with certificate validation audit logs.</p>
-                        </div>
-                        <div style="background: var(--bg-surface-elevated); padding: 0.9rem 1.1rem; border-radius: var(--radius-sm); border-left: 3px solid var(--accent-cyan);">
-                            <strong style="color: var(--accent-cyan); font-size: 0.88rem;">Port Scanning &rarr; Revocation / OCSP Blackout</strong>
-                            <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-top: 0.2rem;">Probing certificate revocation infrastructure to execute denial-of-service against timestamping.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-header">
-                        <div>
-                            <h3 class="panel-title"><span>⚛️</span> Quantum Entanglement Protocol</h3>
-                            <p class="panel-subtitle">Bell-state |&Phi;+&rang; transmission and fidelity verification</p>
-                        </div>
-                        <span class="badge badge-quantum">QDS Physics</span>
-                    </div>
-                    <div class="alert-callout alert-info" style="margin-bottom: 1rem;">
-                        <div>
-                            <strong>Entanglement Core:</strong> Signer & Verifier share entangled photon pairs:
-                            <div style="font-family: var(--font-mono); margin-top: 0.35rem; color: var(--accent-cyan);">
-                                |&Phi;+&rang; = (|00&rang; + |11&rang;) / &radic;2
-                            </div>
-                        </div>
-                    </div>
-                    <p style="color: var(--color-text-secondary); font-size: 0.88rem; margin-bottom: 1rem;">
-                        An adversarial depolarizing channel introduces noise parameterized by detected network threat severity:
-                        <span style="font-family: var(--font-mono); color: var(--accent-quantum-light);">&rho;' = (1-p)&rho; + (p/3)&Sigma;&sigma;&rho;&sigma;</span>.
-                    </p>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Operational Scenario</th>
-                                <th>State Fidelity F(&rho;)</th>
-                                <th>QBER</th>
-                                <th>Signature Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Benign Flow (Legitimate PKI)</strong></td>
-                                <td class="val-mono" style="color: var(--status-safe);">0.98 (98.0%)</td>
-                                <td class="val-mono">2.0%</td>
-                                <td><span class="badge badge-safe">VERIFIED_AUTHENTIC</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Malicious Impersonation Attempt</strong></td>
-                                <td class="val-mono" style="color: var(--status-threat);">0.25 (25.0%)</td>
-                                <td class="val-mono">75.0%</td>
-                                <td><span class="badge badge-threat">REJECTED_TAMPERED</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Quick Action Call to Live Console -->
-            <div style="text-align: center; margin-top: 1rem;">
-                <button class="btn btn-primary" style="padding: 0.9rem 2.5rem; font-size: 1rem;" onclick="switchTab('threat')">
-                    ⚡ Open Live Threat Testing Console
-                </button>
             </div>
         </section>
 
-
-        <!-- ================================================================= -->
-        <!-- TAB 2: DATASET STUDIO                                             -->
-        <!-- ================================================================= -->
-        <section id="tab-dataset" class="tab-content">
-            <div class="panel">
+        <!-- ═══ SECTION 2: CLASSICAL VS QUANTUM BENCHMARKS ═══ -->
+        <section id="comparison">
+            <div class="panel panel-cyber-cyan">
                 <div class="panel-header">
                     <div>
-                        <h2 class="panel-title"><span>📁</span> Authentic CIC-IDS2017 Dataset Telemetry</h2>
-                        <p class="panel-subtitle">Canadian Institute for Cybersecurity benchmark data & clean ingestion pipeline</p>
+                        <h2 class="panel-title"><span>⚖️</span> Classical vs Quantum — Side-by-Side Comparison</h2>
+                        <p class="panel-subtitle">Head-to-head empirical benchmark on authentic CIC-IDS2017 telemetry in
+                            a single interface</p>
                     </div>
-                    <span class="badge badge-cyan">Zero Synthetic Data</span>
+                    <span class="badge badge-cyan">Unified Benchmark</span>
                 </div>
 
-                <div class="alert-callout alert-info">
-                    <div>
-                        <strong>Authentic Cyber Ground Truth:</strong> Sourced from the University of New Brunswick (CIC-IDS2017) canonical PCAP captures. Contains genuine normal network flow and real web attack records with 78 numerical packet flow metrics.
-                    </div>
-                </div>
-
-                <div class="grid-cards-4">
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">Total Records</span><span class="metric-icon">📄</span></div>
-                        <div class="metric-value">2,999</div>
-                        <div class="metric-footer"><span>Sampled for simulation feasibility</span></div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">Normal Flows (BENIGN)</span><span class="metric-icon">🟢</span></div>
-                        <div class="metric-value" style="color: var(--status-safe);">2,934</div>
-                        <div class="metric-footer"><span class="badge badge-safe">97.83% of dataset</span></div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">Malicious Web Attacks</span><span class="metric-icon">🔴</span></div>
-                        <div class="metric-value" style="color: var(--status-threat);">65</div>
-                        <div class="metric-footer"><span class="badge badge-threat">2.17% minority class</span></div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">Data Leakage Prevention</span><span class="metric-icon">🛡️</span></div>
-                        <div class="metric-value" style="color: var(--accent-cyan); font-size: 1.3rem;">Zero Leakage</div>
-                        <div class="metric-footer"><span>Strict 80/20 Stratified Split</span></div>
-                    </div>
-                </div>
-
-                <!-- Cleaning Pipeline Table -->
                 <div class="comparison-table-wrapper">
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Processing Stage</th>
-                                <th>Action Taken</th>
-                                <th>Integrity Guarantee</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Header Whitespace Trimming</strong></td>
-                                <td>Stripped leading spaces from column names (e.g. <code>' Flow Duration'</code> &rarr; <code>'Flow Duration'</code>)</td>
-                                <td>Canonical standard column alignment</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Infinite Value Handling</strong></td>
-                                <td>Replaced divide-by-zero infinities in <code>Flow Bytes/s</code> and packet rates with median values</td>
-                                <td>Zero <code>inf</code> values passed to estimators</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Missing / NaN Value Imputation</strong></td>
-                                <td>Eliminated null label records; median imputed numerical columns strictly from train split</td>
-                                <td>Zero NaN degradation</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Dimensionality Reduction</strong></td>
-                                <td>Variance threshold filtered constant columns; PCA extracted 4 principal orthogonal components</td>
-                                <td><strong>99.96% of variance</strong> preserved in 4 qubits</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- ================================================================= -->
-        <!-- TAB 3: CLASSICAL ML STUDIO                                        -->
-        <!-- ================================================================= -->
-        <section id="tab-classical" class="tab-content">
-            <div class="panel">
-                <div class="panel-header">
-                    <div>
-                        <h2 class="panel-title"><span>💻</span> Classical Threat Classifier (Random Forest)</h2>
-                        <p class="panel-subtitle">Full-dimension ensemble decision tree baseline trained on 66 active features</p>
-                    </div>
-                    <span class="badge badge-safe">Classical Baseline</span>
-                </div>
-
-                <div class="grid-cards-4">
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">Test Accuracy</span><span class="metric-icon">🎯</span></div>
-                        <div class="metric-value" style="color: var(--status-safe);">99.67%</div>
-                        <div class="metric-footer"><span>Evaluated on 598 held-out test flows</span></div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">Precision</span><span class="metric-icon">🔍</span></div>
-                        <div class="metric-value">86.67%</div>
-                        <div class="metric-footer"><span>Low false alarm rate</span></div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">Recall</span><span class="metric-icon">📡</span></div>
-                        <div class="metric-value" style="color: var(--accent-cyan);">100.00%</div>
-                        <div class="metric-footer"><span class="badge badge-safe">Zero Missed Attacks</span></div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">F1-Score</span><span class="metric-icon">⭐</span></div>
-                        <div class="metric-value" style="color: #facc15;">0.9286</div>
-                        <div class="metric-footer"><span>Harmonic balance</span></div>
-                    </div>
-                </div>
-
-                <div class="grid-2">
-                    <div class="panel" style="margin-bottom: 0;">
-                        <h3 class="panel-title" style="margin-bottom: 1rem;">Confusion Matrix (598 Test Samples)</h3>
-                        <table class="data-table" style="text-align: center;">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Pred Normal (0)</th>
-                                    <th>Pred Threat (1)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="font-weight: 700; text-align: left;">Actual Normal (0)</td>
-                                    <td class="val-mono" style="color: var(--status-safe); font-size: 1.15rem;">583 (TN)</td>
-                                    <td class="val-mono" style="color: var(--status-warning); font-size: 1.15rem;">2 (FP)</td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: 700; text-align: left;">Actual Threat (1)</td>
-                                    <td class="val-mono" style="color: var(--status-threat); font-size: 1.15rem;">0 (FN)</td>
-                                    <td class="val-mono" style="color: var(--status-safe); font-size: 1.15rem;">13 (TP)</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="panel" style="margin-bottom: 0;">
-                        <h3 class="panel-title" style="margin-bottom: 1rem;">Latency & Operational Metrics</h3>
-                        <table class="data-table">
-                            <tbody>
-                                <tr>
-                                    <td><strong>Training Wall-Clock Time</strong></td>
-                                    <td class="val-mono" style="color: var(--status-safe);">0.5597 seconds</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Inference Latency per Packet</strong></td>
-                                    <td class="val-mono" style="color: var(--accent-cyan);">0.092 ms / sample</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>ROC-AUC Discriminability</strong></td>
-                                    <td class="val-mono" style="color: #facc15;">0.9999</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Estimator Architecture</strong></td>
-                                    <td>Random Forest (100 trees, max_depth=12)</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- ================================================================= -->
-        <!-- TAB 4: QUANTUM MODEL STUDIO                                       -->
-        <!-- ================================================================= -->
-        <section id="tab-quantum" class="tab-content">
-            <div class="panel">
-                <div class="panel-header">
-                    <div>
-                        <h2 class="panel-title"><span>⚛️</span> Quantum Threat Classifier (PennyLane Engine)</h2>
-                        <p class="panel-subtitle">Angle-encoded quantum circuits evaluated on classical statevector simulation backend</p>
-                    </div>
-                    <span class="badge badge-quantum">Quantum Simulation</span>
-                </div>
-
-                <!-- Academic Transparency Callout -->
-                <div class="alert-callout alert-warning">
-                    <span style="font-size: 1.3rem;">⚠️</span>
-                    <div>
-                        <strong>Academic Transparency:</strong> This quantum model is executed on PennyLane's <code>default.qubit</code> statevector simulator on CPU. It executes genuine quantum states, unitaries, and Pauli expectation values on classical hardware. It does NOT claim quantum speedup, which requires physical fault-tolerant quantum processors (QPUs).
-                    </div>
-                </div>
-
-                <div class="grid-cards-4">
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">Test Accuracy</span><span class="metric-icon">⚛️</span></div>
-                        <div class="metric-value" style="color: var(--accent-quantum-light);">6.25%</div>
-                        <div class="metric-footer"><span>Evaluated on 80 quantum test states</span></div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">Qubit Register</span><span class="metric-icon">🎛️</span></div>
-                        <div class="metric-value" style="color: var(--accent-cyan);">4 Qubits</div>
-                        <div class="metric-footer"><span>Hilbert Space Dim: 2^4 = 16</span></div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">Recall</span><span class="metric-icon">📡</span></div>
-                        <div class="metric-value" style="color: var(--status-safe);">100.00%</div>
-                        <div class="metric-footer"><span>Captured all threat states</span></div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">Simulation Latency</span><span class="metric-icon">⏱️</span></div>
-                        <div class="metric-value">1,090.9 ms</div>
-                        <div class="metric-footer"><span>Classical CPU simulation overhead</span></div>
-                    </div>
-                </div>
-
-                <!-- Quantum Circuit Architecture -->
-                <div class="panel">
-                    <div class="panel-header">
-                        <div>
-                            <h3 class="panel-title"><span>📐</span> Actual Quantum Circuit Diagram</h3>
-                            <p class="panel-subtitle">Generated directly from PennyLane feature map & adjoint overlap circuit</p>
-                        </div>
-                        <span class="badge badge-cyan">Genuine Gate Topology</span>
-                    </div>
-
-                    <div class="circuit-ascii-box">
-0: ──RY(0.50)─╭●───────╭X──RZ(0.50)──RZ(0.50)†─╭X†────────────────╭X†─────────RY(0.50)†─┤ ╭Probs
-1: ──RY(0.50)─╰X─╭●────│───RZ(0.50)──RZ(0.50)†─│───────╭X†────────╰X†─────────RY(0.50)†─┤ ├Probs
-2: ──RY(0.50)────╰X─╭●─│───RZ(0.50)──RZ(0.50)†─│───╭X†─╰X†─────────RY(0.50)†────────────┤ ├Probs
-3: ──RY(0.50)───────╰X─╰●──RZ(0.50)──RZ(0.50)†─╰X†─╰X†──RY(0.50)†───────────────────────┤ ╰Probs</div>
-
-                    <div class="grid-3" style="margin-top: 1.25rem; margin-bottom: 0;">
-                        <div style="background: var(--bg-surface-elevated); padding: 1rem; border-radius: var(--radius-sm);">
-                            <strong style="color: var(--accent-cyan); font-size: 0.82rem; text-transform: uppercase;">Angle Embedding:</strong>
-                            <p style="font-size: 0.84rem; color: var(--color-text-secondary); margin-top: 0.35rem;">
-                                Feature vector projected into rotation angles &theta;<sub>i</sub> &isin; [0, &pi;] mapped to single-qubit rotations R<sub>y</sub>(&theta;<sub>i</sub>) and R<sub>z</sub>(&theta;<sub>i</sub>).
-                            </p>
-                        </div>
-                        <div style="background: var(--bg-surface-elevated); padding: 1rem; border-radius: var(--radius-sm);">
-                            <strong style="color: var(--accent-quantum-light); font-size: 0.82rem; text-transform: uppercase;">Circular CNOT Entanglement:</strong>
-                            <p style="font-size: 0.84rem; color: var(--color-text-secondary); margin-top: 0.35rem;">
-                                Entangling ladder establishes Bell-state and GHZ-style correlations across qubits, binding pairwise feature interactions.
-                            </p>
-                        </div>
-                        <div style="background: var(--bg-surface-elevated); padding: 1rem; border-radius: var(--radius-sm);">
-                            <strong style="color: var(--status-safe); font-size: 0.82rem; text-transform: uppercase;">Quantum Kernel Overlap:</strong>
-                            <p style="font-size: 0.84rem; color: var(--color-text-secondary); margin-top: 0.35rem;">
-                                Computes Gram matrix overlap K(x, x') = |&lang;&psi;(x)|&psi;(x')&rang;|<sup>2</sup> evaluated via probability of measuring all-zeros state |0000&rang;.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- ================================================================= -->
-        <!-- TAB 5: HEAD-TO-HEAD COMPARISON                                    -->
-        <!-- ================================================================= -->
-        <section id="tab-comparison" class="tab-content">
-            <div class="panel">
-                <div class="panel-header">
-                    <div>
-                        <h2 class="panel-title"><span>⚖️</span> Head-to-Head Comparative Benchmark</h2>
-                        <p class="panel-subtitle">Automated scientific evaluation comparing classical trees against quantum circuits</p>
-                    </div>
-                    <span class="badge badge-cyan">Side-by-Side Audit</span>
-                </div>
-
-                <!-- Comparison Table -->
-                <div class="comparison-table-wrapper" style="margin-bottom: 2rem;">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
                                 <th>Benchmark Metric</th>
-                                <th>Classical (Random Forest)</th>
-                                <th>Quantum (PennyLane QSVC)</th>
-                                <th>Advantage / Factor</th>
+                                <th>💻 Classical ML (Random Forest)</th>
+                                <th>⚛️ Quantum ML (PennyLane QSVC + Qiskit Aer)</th>
+                                <th>Advantage / Verdict</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td><strong>Test Accuracy</strong></td>
-                                <td class="val-mono" style="color: var(--status-safe);">99.67%</td>
+                                <td class="val-mono">99.67%</td>
                                 <td class="val-mono">6.25%</td>
                                 <td><span class="badge badge-safe">+93.42% Classical</span></td>
                             </tr>
                             <tr>
                                 <td><strong>Precision</strong></td>
-                                <td class="val-mono" style="color: var(--status-safe);">86.67%</td>
+                                <td class="val-mono">86.67%</td>
                                 <td class="val-mono">2.60%</td>
                                 <td><span class="badge badge-safe">+84.07% Classical</span></td>
                             </tr>
                             <tr>
                                 <td><strong>Recall</strong></td>
-                                <td class="val-mono" style="color: var(--status-safe);">100.00%</td>
-                                <td class="val-mono" style="color: var(--status-safe);">100.00%</td>
-                                <td><span class="badge badge-cyan">Parity (100%)</span></td>
+                                <td class="val-mono">100.00%</td>
+                                <td class="val-mono">100.00%</td>
+                                <td><span class="badge badge-cyan">Parity (100% Caught)</span></td>
                             </tr>
                             <tr>
                                 <td><strong>F1-Score</strong></td>
-                                <td class="val-mono" style="color: #facc15;">0.9286</td>
+                                <td class="val-mono">0.9286</td>
                                 <td class="val-mono">0.0506</td>
                                 <td><span class="badge badge-safe">Winner: Classical (+0.878)</span></td>
                             </tr>
                             <tr>
                                 <td><strong>Training Duration</strong></td>
-                                <td class="val-mono" style="color: var(--status-safe);">0.56 seconds</td>
+                                <td class="val-mono">0.56 seconds</td>
                                 <td class="val-mono">66.81 seconds</td>
-                                <td><span class="badge badge-safe">119x Faster Classical</span></td>
+                                <td><span class="badge badge-safe">119x Faster</span></td>
                             </tr>
                             <tr>
                                 <td><strong>Inference Latency</strong></td>
-                                <td class="val-mono" style="color: var(--status-safe);">0.092 ms / sample</td>
+                                <td class="val-mono">0.092 ms / sample</td>
                                 <td class="val-mono">1,090.9 ms / sample</td>
-                                <td><span class="badge badge-safe">14,500x Faster Classical</span></td>
+                                <td><span class="badge badge-safe">14,500x Faster</span></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <!-- Chart.js Visualization Grid -->
                 <div class="grid-2">
-                    <div class="panel" style="margin-bottom: 0;">
-                        <h3 class="panel-title" style="margin-bottom: 1rem;">Performance Comparison</h3>
-                        <div class="chart-container">
-                            <canvas id="performanceChart"></canvas>
+                    <div>
+                        <h4 class="form-label">💻 Classical — Confusion Matrix (598 Test Flows)</h4>
+                        <div class="comparison-table-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Actual</th>
+                                        <th>Pred: Normal</th>
+                                        <th>Pred: Malicious</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Normal (585)</strong></td>
+                                        <td class="val-mono">583 (TN)</td>
+                                        <td class="val-mono">2 (FP)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Threat (13)</strong></td>
+                                        <td class="val-mono">0 (FN)</td>
+                                        <td class="val-mono">13 (TP)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="chart-box">
+                            <canvas id="perfChart"></canvas>
                         </div>
                     </div>
-                    <div class="panel" style="margin-bottom: 0;">
-                        <h3 class="panel-title" style="margin-bottom: 1rem;">Inference Latency (Log Scale)</h3>
-                        <div class="chart-container">
-                            <canvas id="latencyChart"></canvas>
+
+                    <div>
+                        <h4 class="form-label">⚛️ Quantum Circuit — PennyLane 4-Qubit Topology</h4>
+                        <div class="circuit-ascii-box">
+                            0: ──RY(θ)─╭●───────╭X──RZ(θ)──RZ(θ)†─╭X†─────RY(θ)†─┤ ╭Probs
+                            1: ──RY(θ)─╰X─╭●────│───RZ(θ)──RZ(θ)†─│──╭X†──RY(θ)†─┤ ├Probs
+                            2: ──RY(θ)────╰X─╭●─│───RZ(θ)──RZ(θ)†─│──╰X†─RY(θ)†──┤ ├Probs
+                            3: ──RY(θ)───────╰X─╰●──RZ(θ)──RZ(θ)†─╰X†─RY(θ)†─────┤ ╰Probs</div>
+                        <div class="chart-box">
+                            <canvas id="latChart"></canvas>
                         </div>
                     </div>
                 </div>
 
-                <!-- Scientific Verdict Banner -->
-                <div class="alert-callout alert-info" style="margin-top: 1.5rem; margin-bottom: 0;">
+                <div class="panel panel-cyber-pink">
+                    <div class="panel-header">
+                        <div>
+                            <h3 class="panel-title"><span>📈</span> Threat Disturbance &amp; Quantum Fidelity Matrix
+                            </h3>
+                            <p class="panel-subtitle">Interactive matrix showing Channel Disturbance, Bell-state
+                                Fidelity, and QBER across all 7 attack vectors</p>
+                        </div>
+                        <span class="badge badge-pink">Plotly Matrix</span>
+                    </div>
+                    <div id="plotlyHeatmap" class="chart-box"></div>
+                </div>
+
+                <div class="alert-callout alert-info">
                     <div>
-                        <strong style="font-size: 1.05rem;">Honest Scientific Verdict:</strong><br>
-                        The Classical Random Forest achieved superior F1-score (0.9286 vs 0.0506) and orders of magnitude faster training and inference. For tabular cybersecurity network telemetry, classical ensemble decision trees currently outperform simulated quantum circuits on classical computers in both accuracy and operational latency. Real quantum advantages require physical fault-tolerant quantum hardware.
+                        <strong>🔬 Scientific Verdict:</strong> Classical Random Forest achieves superior F1 (0.9286 vs
+                        0.0506) and 14,500x faster inference. True quantum advantage requires fault-tolerant physical
+                        QPU hardware.
                     </div>
                 </div>
             </div>
         </section>
 
-
-        <!-- ================================================================= -->
-        <!-- TAB 6: LIVE THREAT & DIGITAL SIGNATURE CONSOLE                    -->
-        <!-- ================================================================= -->
-        <section id="tab-threat" class="tab-content">
-            <div class="panel">
+        <!-- ═══ SECTION 3: DIGITAL SIGNATURE TOOLKIT ═══ -->
+        <section id="crypto">
+            <div class="panel panel-cyber-yellow">
                 <div class="panel-header">
                     <div>
-                        <h2 class="panel-title"><span>🛡️</span> Live Cyber Threat & Digital Signature Console</h2>
-                        <p class="panel-subtitle">Test real network flow vectors across classical & quantum classifiers with Bell-state signature verification</p>
+                        <h2 class="panel-title"><span>🔐</span> Digital Signature &amp; Cryptography Toolkit</h2>
+                        <p class="panel-subtitle">RSA-2048 key generation, signing, verification, encryption &amp;
+                            decryption — powered by Web Crypto API</p>
                     </div>
-                    <span class="badge badge-cyan">Interactive Console</span>
+                    <span class="badge badge-warning">Web Crypto API</span>
                 </div>
 
-                <!-- Testing Form -->
-                <div style="background: var(--bg-surface-elevated); padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 1.75rem;">
-                    <form id="liveTestForm" onsubmit="executeLiveTest(event)">
-                        <div class="grid-2">
-                            <div class="form-group">
-                                <label class="form-label">Authentic CIC Flow Preset</label>
-                                <select id="presetSelect" class="form-control" onchange="loadPreset()">
-                                    <option value="benign">Normal Flow (BENIGN) - Standard PKI Operation</option>
-                                    <option value="bruteforce" selected>Web Attack: Brute Force - Signing Impersonation</option>
-                                    <option value="sqlinjection">Web Attack: SQL Injection - Certificate Key Forgery</option>
-                                    <option value="portscan">PortScan - OCSP / Revocation Server Reconnaissance</option>
-                                </select>
-                                <small id="presetInfo" style="color: var(--color-text-muted); font-size: 0.78rem; margin-top: 0.35rem; display: block;">
-                                    Authentic Web Attack – Brute Force (Impersonation)
-                                </small>
+                <div class="btn-row" id="cryptoTabs">
+                    <button type="button" class="btn btn-primary btn-sm crypto-tab-btn active" data-cp="keygen"
+                        onclick="switchCryptoTab('keygen')" title="RSA-2048 Key Generation">🔑 Key Gen</button>
+                    <button type="button" class="btn btn-secondary btn-sm crypto-tab-btn" data-cp="sign"
+                        onclick="switchCryptoTab('sign')" title="Digital Signature Sign and Verify">✍️ Sign &amp;
+                        Verify</button>
+                    <button type="button" class="btn btn-secondary btn-sm crypto-tab-btn" data-cp="enc"
+                        onclick="switchCryptoTab('enc')" title="RSA-OAEP Asymmetric Encryption">🔒
+                        Encrypt/Decrypt</button>
+                    <button type="button" class="btn btn-secondary btn-sm crypto-tab-btn" data-cp="hash"
+                        onclick="switchCryptoTab('hash')" title="SHA-256 Hash Digest Engine">🧬 SHA-256 &amp;
+                        Avalanche</button>
+                    <button type="button" class="btn btn-secondary btn-sm crypto-tab-btn" data-cp="cert"
+                        onclick="switchCryptoTab('cert')" title="X.509 Certificate Inspector">📜 X.509
+                        Certificate</button>
+                    <button type="button" class="btn btn-secondary btn-sm crypto-tab-btn" data-cp="qsim"
+                        onclick="switchCryptoTab('qsim')" title="Quantum Depolarizing Channel Simulator">⚛️ Quantum
+                        Noise</button>
+                    <button type="button" class="btn btn-secondary btn-sm crypto-tab-btn" data-cp="qkd"
+                        onclick="switchCryptoTab('qkd')" title="Quantum Key Distribution Simulator">🛰️ QKD
+                        BB84</button>
+                </div>
+
+                <!-- 1. Key Gen -->
+                <div class="crypto-panel" id="cp-keygen">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h4 class="panel-title">🔑 RSA-2048 Key Pair Generator</h4>
+                                <p class="panel-subtitle">Web Crypto API — browser-native, zero external libraries</p>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Attack Context Label</label>
-                                <input type="text" id="flowLabel" class="form-control" value="Web Attack - Brute Force">
+                            <div>
+                                <button type="button" class="btn btn-primary" id="btnGenKeys"
+                                    onclick="generateRSAKeys()" title="Generate 2048-bit RSA key pair">🔑 Generate RSA
+                                    Keys</button>
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                    onclick="copyCryptoElement('pubKeyOut')" title="Copy Public Key to Clipboard">📋
+                                    Copy Public</button>
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                    onclick="copyCryptoElement('privKeyOut')" title="Copy Private Key to Clipboard">📋
+                                    Copy Private</button>
+                            </div>
+                        </div>
+                        <div class="grid-2">
+                            <div>
+                                <label class="form-label" for="pubKeyOut">🔓 Public Key (SPKI)</label>
+                                <pre class="code-preview-box code-preview-cyan"
+                                    id="pubKeyOut">Click 'Generate RSA Keys' to create key pair...</pre>
+                            </div>
+                            <div>
+                                <label class="form-label" for="privKeyOut">🔒 Private Key (PKCS8)</label>
+                                <pre class="code-preview-box code-preview-pink"
+                                    id="privKeyOut">Click 'Generate RSA Keys' to create key pair...</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Sign & Verify -->
+                <div class="crypto-panel" id="cp-sign">
+                    <div class="panel">
+                        <h4 class="panel-title">✍️ Digital Signature — Sign &amp; Verify</h4>
+                        <p class="panel-subtitle">RSASSA-PKCS1-v1_5 with SHA-256</p>
+
+                        <div class="alert-callout alert-info">
+                            <div>⚡ Generate keys first in "Key Gen" tab. The same key pair is used for all operations.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="signMsgInput">Message / Document to Sign</label>
+                            <textarea class="form-control" id="signMsgInput" rows="2" title="Message to Sign"
+                                placeholder="Enter message payload to digitally sign">QuantumSec Defense — Authentic Digital Signature</textarea>
+                        </div>
+                        <div class="btn-row">
+                            <button type="button" class="btn btn-primary" onclick="signMessage()"
+                                title="Sign message using RSA private key">✍️ Sign</button>
+                            <button type="button" class="btn btn-secondary" onclick="verifySignature()"
+                                title="Verify digital signature using RSA public key">✅ Verify</button>
+                            <button type="button" class="btn btn-pink" onclick="tamperSignature()"
+                                title="Simulate tampering with signature bytes">💀 Tamper</button>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="sigOutputHex">Signature (Hex)</label>
+                            <pre class="code-preview-box code-preview-pink"
+                                id="sigOutputHex">Awaiting signature...</pre>
+                        </div>
+                        <div id="sigVerificationResult"></div>
+                    </div>
+                </div>
+
+                <!-- 3. Encrypt & Decrypt -->
+                <div class="crypto-panel" id="cp-enc">
+                    <div class="panel">
+                        <h4 class="panel-title">🔒 RSA-OAEP Encrypt &amp; Decrypt</h4>
+                        <p class="panel-subtitle">Public key encrypt, private key decrypt</p>
+
+                        <div class="alert-callout alert-info">
+                            <div>⚡ Generate keys first. RSA-OAEP supports payloads up to ~190 bytes for 2048-bit keys.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="encPlainInput">Plaintext Input</label>
+                            <textarea class="form-control" id="encPlainInput" rows="2" title="Plaintext Input"
+                                placeholder="Enter text to encrypt">Top Secret: Quantum channel secure ✓</textarea>
+                        </div>
+                        <div class="btn-row">
+                            <button type="button" class="btn btn-primary" onclick="encryptPlaintext()"
+                                title="Encrypt with RSA Public Key">🔒 Encrypt</button>
+                            <button type="button" class="btn btn-secondary" onclick="decryptCiphertext()"
+                                title="Decrypt with RSA Private Key">🔓 Decrypt</button>
+                        </div>
+                        <div class="grid-2">
+                            <div>
+                                <label class="form-label" for="cipherOutputB64">🔒 Ciphertext (Base64)</label>
+                                <pre class="code-preview-box code-preview-cyan"
+                                    id="cipherOutputB64">Awaiting encryption...</pre>
+                            </div>
+                            <div>
+                                <label class="form-label" for="decryptedOutputPlain">🔓 Recovered Plaintext</label>
+                                <pre class="code-preview-box code-preview-green"
+                                    id="decryptedOutputPlain">Awaiting decryption...</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. SHA-256 & Avalanche -->
+                <div class="crypto-panel" id="cp-hash">
+                    <div class="panel">
+                        <h4 class="panel-title">🧬 SHA-256 Hash Engine &amp; Avalanche Effect</h4>
+                        <p class="panel-subtitle">Deterministic 256-bit digest with real-time bit dispersion</p>
+
+                        <div class="avalanche-summary">
+                            <div class="avalanche-chip">
+                                <span>Flipped Bits (vs Baseline)</span>
+                                <span id="avalancheBitFlips">0 / 256 bits</span>
+                            </div>
+                            <div class="avalanche-chip">
+                                <span>Avalanche Ratio</span>
+                                <span id="avalanchePercent">0.0%</span>
+                            </div>
+                            <div class="avalanche-chip">
+                                <span>Baseline Digest</span>
+                                <span id="avalancheBaseHash" class="val-mono">b4905ff68c92efb9...</span>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Network Flow Vector (78 Numerical Features)</label>
-                            <textarea id="featureVector" class="form-control" rows="3" style="font-family: var(--font-mono); font-size: 0.8rem;"></textarea>
+                            <label class="form-label" for="hashInputText">Input Text</label>
+                            <textarea class="form-control" id="hashInputText" rows="2" oninput="calculateSHA256()"
+                                title="Hash Input"
+                                placeholder="Type text to compute SHA-256 digest">QuantumSec Defense</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="hashOutputHex">SHA-256 Digest (Hex)</label>
+                            <pre class="code-preview-box code-preview-green" id="hashOutputHex"></pre>
+                        </div>
+                        <div class="alert-callout alert-warning">
+                            <div>🔬 <strong>Avalanche Effect:</strong> Change 1 character &rarr; entirely different
+                                hash. This is the foundation of digital signature integrity.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. X.509 Certificate Inspector -->
+                <div class="crypto-panel" id="cp-cert">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h4 class="panel-title">📜 X.509 Digital Certificate Inspector</h4>
+                                <p class="panel-subtitle">Standardized PKI Identity Certificate bound to generated
+                                    RSA-2048 public key</p>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-primary" onclick="generateX509Certificate()"
+                                    title="Re-generate certificate with active keypair">📜 Refresh Certificate</button>
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                    onclick="copyCryptoElement('x509CertView')" title="Copy Certificate to Clipboard">📋
+                                    Copy Certificate</button>
+                            </div>
+                        </div>
+                        <pre id="x509CertView" class="cert-box"></pre>
+                    </div>
+                </div>
+
+                <!-- 6. Quantum Noise Sim -->
+                <div class="crypto-panel" id="cp-qsim">
+                    <div class="panel">
+                        <h4 class="panel-title">⚛️ Quantum Noise Simulator</h4>
+                        <p class="panel-subtitle">Depolarizing channel: <code
+                                class="val-mono">ρ' = (1−p)ρ + (p/3)Σσρσ†</code></p>
+
+                        <div class="form-group">
+                            <label class="form-label" for="noiseSlider">Noise Parameter (p):</label>
+                            <input type="range" id="noiseSlider" min="0" max="100" value="5" class="form-control"
+                                title="Channel Noise Parameter" aria-label="Channel Noise Parameter"
+                                oninput="updateQuantumSimulation()">
+                            <div class="val-mono" id="noiseValLabel">0.05</div>
                         </div>
 
-                        <button type="submit" id="submitTestBtn" class="btn btn-primary" style="padding: 0.85rem 2rem;">
+                        <div class="grid-cards-4">
+                            <div class="metric-card">
+                                <div class="metric-header"><span class="metric-title">State Fidelity</span><span
+                                        class="metric-icon">⚛️</span></div>
+                                <div class="metric-value" id="simFidelityVal">0.9625</div>
+                                <div class="metric-footer"><span>Threshold: &ge; 0.85</span></div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-header"><span class="metric-title">QBER</span><span
+                                        class="metric-icon">📉</span></div>
+                                <div class="metric-value" id="simQberVal">3.8%</div>
+                                <div class="metric-footer"><span>Tolerance: &le; 15%</span></div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-header"><span class="metric-title">Status</span><span
+                                        class="metric-icon">🔐</span></div>
+                                <div class="metric-value" id="simStatusVal">VERIFIED</div>
+                                <div class="metric-footer"><span id="simStatusSub">Authentic</span></div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-header"><span class="metric-title">Security</span><span
+                                        class="metric-icon">🛡️</span></div>
+                                <div class="metric-value" id="simSecVal">SECURE</div>
+                                <div class="metric-footer"><span id="simSecSub">Clean channel</span></div>
+                            </div>
+                        </div>
+                        <div class="chart-box">
+                            <canvas id="simFidChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. QKD BB84 Simulator -->
+                <div class="crypto-panel" id="cp-qkd">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h4 class="panel-title">🛰️ Quantum Key Distribution (BB84 Protocol) Simulator</h4>
+                                <p class="panel-subtitle">Simulate Alice-Bob photon polarization exchange with real-time
+                                    eavesdropper (Eve) detection</p>
+                            </div>
+                            <div class="btn-row">
+                                <label class="checkbox-cyber">
+                                    <input type="checkbox" id="qkdEveIntercept" onchange="simulateQKD()"
+                                        title="Toggle Eve Interception">
+                                    <span>💀 Activate Eve Intercept</span>
+                                </label>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="simulateQKD()"
+                                    title="Generate new transmission">🎲 Transmit Photons</button>
+                            </div>
+                        </div>
+
+                        <div class="grid-cards-4">
+                            <div class="metric-card">
+                                <div class="metric-header"><span class="metric-title">QKD QBER</span><span
+                                        class="metric-icon">📉</span></div>
+                                <div id="qkdQberVal" class="metric-value">0.0%</div>
+                                <div class="metric-footer"><span>Tolerance: &le; 11%</span></div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-header"><span class="metric-title">Channel Status</span><span
+                                        class="metric-icon">🔐</span></div>
+                                <div id="qkdStatusVal" class="metric-value">SECURE</div>
+                                <div class="metric-footer"><span>QDS Validation</span></div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-header"><span class="metric-title">Sifted Shared Key</span><span
+                                        class="metric-icon">🔑</span></div>
+                                <div id="qkdSiftedKey" class="metric-value val-mono">10110</div>
+                                <div class="metric-footer"><span>Identical Bits</span></div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-header"><span class="metric-title">Photon Basis</span><span
+                                        class="metric-icon">⚛️</span></div>
+                                <div class="metric-value">Rect / Diag</div>
+                                <div class="metric-footer"><span>+ and ×</span></div>
+                            </div>
+                        </div>
+
+                        <div class="comparison-table-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Pulse #</th>
+                                        <th>Alice Bit</th>
+                                        <th>Alice Basis</th>
+                                        <th>Bob Basis</th>
+                                        <th>Bob Measured</th>
+                                        <th>Basis Match?</th>
+                                        <th>Key Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="qkdTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ SECTION 4: LIVE THREAT CONSOLE ═══ -->
+        <section id="threat">
+            <div class="panel panel-cyber-pink">
+                <div class="panel-header">
+                    <div>
+                        <h2 class="panel-title"><span>🛡️</span> Live Cyber Threat Console</h2>
+                        <p class="panel-subtitle">Test across 7 attack types with dual Classical &amp; Quantum
+                            classifiers + QDS verification</p>
+                    </div>
+                    <div class="btn-row">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="exportSecurityAuditReport()"
+                            title="Export complete audit logs as JSON">📥 Export Audit (JSON)</button>
+                        <span class="badge badge-pink">Live Defense</span>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <form id="liveTestForm" onsubmit="executeLiveTest(event)">
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label class="form-label" for="presetSelect">Attack Preset</label>
+                                <select id="presetSelect" class="form-control" title="Select Attack Preset"
+                                    aria-label="Select Attack Preset" onchange="loadPreset()">
+                                    <option value="benign">Normal Flow (BENIGN) — Standard PKI</option>
+                                    <option value="bruteforce" selected>Web Attack: Brute Force — Impersonation</option>
+                                    <option value="sqli">Web Attack: SQL Injection — Key Forgery</option>
+                                    <option value="xss">Web Attack: XSS — Session Hijack</option>
+                                    <option value="replay">Replay Attack — Token Replay</option>
+                                    <option value="forgery">Forgery Attack — Certificate Spoofing</option>
+                                    <option value="impersonation">Impersonation Attack — Identity Theft</option>
+                                </select>
+                                <small id="presetInfo" class="metric-footer">
+                                    Authentic Web Attack – Brute Force (Impersonation)
+                                </small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="flowLabel">Context Label</label>
+                                <input type="text" class="form-control" id="flowLabel" value="Web Attack - Brute Force"
+                                    title="Flow Label" placeholder="Attack context label">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="featureVector">Network Flow Vector (78 Features)</label>
+                            <textarea class="form-control" id="featureVector" rows="3" title="Features Vector"
+                                placeholder="Enter 78 numerical features"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="submitTestBtn"
+                            title="Run cyber defense simulation">
                             ⚡ Execute Hybrid Cyber Defense Test
                         </button>
                     </form>
                 </div>
 
-                <!-- Live Results Panel -->
+                <!-- Results -->
                 <div id="liveResultsBox">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
-                        <span>🔍</span> Real-Time Hybrid Threat & Quantum Security Evaluation
-                    </h3>
+                    <h3 class="panel-title"><span>🔍</span> Threat &amp; Quantum Security Evaluation</h3>
 
-                    <!-- Dual Classification Cards -->
                     <div class="grid-2">
-                        <div class="panel" style="border-left: 4px solid var(--accent-cyan);">
+                        <div class="panel panel-cyber-cyan">
                             <div class="panel-header">
                                 <div>
-                                    <h4 class="panel-title">Classical Model (Random Forest)</h4>
-                                    <p class="panel-subtitle">66-Feature Ensemble Classifier</p>
+                                    <h4 class="panel-title">Classical (Random Forest)</h4>
+                                    <p class="panel-subtitle">scikit-learn 66-feature model</p>
                                 </div>
-                                <span id="resClassicalBadge" class="badge badge-threat">THREAT</span>
+                                <span class="badge badge-threat" id="resClassicalBadge">ATTACK DETECTED</span>
                             </div>
-                            <div id="resClassicalVerdict" style="font-size: 1.35rem; font-weight: 800; color: #f87171; margin-bottom: 0.3rem;">
-                                MALICIOUS CYBER THREAT
-                            </div>
-                            <div id="resClassicalConf" class="val-mono" style="color: var(--accent-cyan);">
-                                99.8% Threat Confidence
-                            </div>
+                            <div class="metric-value" id="resClassicalVerdict">MALICIOUS CYBER THREAT</div>
+                            <div class="metric-footer"><span id="resClassicalConf">99.8% Confidence</span><span>Latency:
+                                    0.092ms</span></div>
                         </div>
 
-                        <div class="panel" style="border-left: 4px solid var(--accent-quantum-light);">
+                        <div class="panel panel-cyber-purple">
                             <div class="panel-header">
                                 <div>
-                                    <h4 class="panel-title">Quantum Model (PennyLane QSVC)</h4>
-                                    <p class="panel-subtitle">4-Qubit Angle-Encoded Circuit</p>
+                                    <h4 class="panel-title">Quantum (PennyLane QSVC)</h4>
+                                    <p class="panel-subtitle">4-Qubit circuit on Qiskit Aer</p>
                                 </div>
-                                <span id="resQuantumBadge" class="badge badge-threat">THREAT</span>
+                                <span class="badge badge-threat" id="resQuantumBadge">QUANTUM THREAT</span>
                             </div>
-                            <div id="resQuantumVerdict" style="font-size: 1.35rem; font-weight: 800; color: var(--accent-quantum-light); margin-bottom: 0.3rem;">
-                                MALICIOUS CYBER THREAT
-                            </div>
-                            <div id="resQuantumConf" class="val-mono" style="color: var(--accent-quantum-light);">
-                                98.2% State Fidelity Probability
-                            </div>
+                            <div class="metric-value" id="resQuantumVerdict">MALICIOUS CYBER THREAT</div>
+                            <div class="metric-footer"><span id="resQuantumConf">98.2% State
+                                    Probability</span><span>Simulated Qiskit Aer</span></div>
                         </div>
                     </div>
 
-                    <!-- Digital Signature Security Verification -->
-                    <div class="panel" style="border-top: 3px solid #f59e0b;">
+                    <div class="panel panel-cyber-yellow">
                         <div class="panel-header">
                             <div>
-                                <h3 class="panel-title"><span>🔐</span> Quantum Digital Signature (QDS) Verification Engine</h3>
-                                <p class="panel-subtitle">Bell-state entanglement validation under detected adversarial channel disturbance</p>
+                                <h4 class="panel-title">Digital Signature Security &amp; QDS Protocol</h4>
+                                <p class="panel-subtitle">Bell-state entanglement channel verification</p>
                             </div>
-                            <span id="resSignatureBadge" class="badge badge-threat">REJECTED_TAMPERED</span>
+                            <span class="badge badge-threat" id="resSignatureBadge">REJECTED_TAMPERED</span>
                         </div>
 
-                        <div class="grid-cards-4" style="margin-bottom: 1.25rem;">
+                        <div class="grid-cards-4">
                             <div class="metric-card">
-                                <div class="metric-header"><span class="metric-title">Vulnerability Category</span><span class="metric-icon">⚠️</span></div>
-                                <div id="resCategory" class="metric-value" style="font-size: 1.05rem; color: #fbbf24;">Credential Impersonation</div>
-                                <div class="metric-footer"><span>PKI Impact Vector</span></div>
+                                <div class="metric-header"><span class="metric-title">Category</span></div>
+                                <div class="val-mono" id="resCategory">Credential Theft</div>
                             </div>
                             <div class="metric-card">
-                                <div class="metric-header"><span class="metric-title">Channel Disturbance</span><span class="metric-icon">🌪️</span></div>
-                                <div id="resDisturbance" class="metric-value" style="color: #f87171;">p = 0.65</div>
-                                <div class="metric-footer"><span>Noise parameter</span></div>
+                                <div class="metric-header"><span class="metric-title">Disturbance</span></div>
+                                <div class="val-mono" id="resDisturbance">p = 0.65</div>
                             </div>
                             <div class="metric-card">
-                                <div class="metric-header"><span class="metric-title">Quantum State Fidelity</span><span class="metric-icon">⚛️</span></div>
-                                <div id="resFidelity" class="metric-value" style="color: #f87171;">0.35</div>
-                                <div class="metric-footer"><span>Threshold: &ge; 0.85</span></div>
+                                <div class="metric-header"><span class="metric-title">Fidelity</span></div>
+                                <div class="metric-value" id="resFidelity">0.5125</div>
+                                <div class="metric-footer"><span>&ge; 0.85</span></div>
                             </div>
                             <div class="metric-card">
-                                <div class="metric-header"><span class="metric-title">Quantum Bit Error Rate</span><span class="metric-icon">📉</span></div>
-                                <div id="resQber" class="metric-value" style="color: #f87171;">65.0%</div>
-                                <div class="metric-footer"><span>Tolerance: &le; 15.0%</span></div>
+                                <div class="metric-header"><span class="metric-title">QBER</span></div>
+                                <div class="metric-value" id="resQber">48.8%</div>
+                                <div class="metric-footer"><span>&le; 15%</span></div>
                             </div>
                         </div>
 
-                        <div class="alert-callout alert-warning" id="resVerdictCallout" style="margin-bottom: 0;">
+                        <div class="alert-callout alert-threat" id="resVerdictCallout">
                             <div>
-                                <strong id="resVerdictTitle">Adversarial Impersonation Intercepted!</strong><br>
-                                <span id="resVerdictDesc">Quantum Bit Error Rate (65.0%) exceeds safety threshold! Adversarial interception or key tampering detected. Digital signature rejected to protect enterprise certificate infrastructure.</span>
+                                <strong id="resVerdictTitle">Interception Detected!</strong>
+                                <p id="resVerdictDesc">QBER exceeds tolerance. Signature rejected.</p>
                             </div>
                         </div>
                     </div>
@@ -1246,324 +675,87 @@
             </div>
         </section>
 
-
-        <!-- ================================================================= -->
-        <!-- TAB 7: SCIENTIFIC HONESTY & ROADMAP                               -->
-        <!-- ================================================================= -->
-        <section id="tab-scientific" class="tab-content">
-            <div class="panel">
+        <!-- ═══ SECTION 5: DATASET TELEMETRY ═══ -->
+        <section id="metrics">
+            <div class="panel panel-cyber-green">
                 <div class="panel-header">
                     <div>
-                        <h2 class="panel-title"><span>🔬</span> Scientific Honesty & Hardware Roadmap</h2>
-                        <p class="panel-subtitle">Transparent research limits, classical superiority on tabular data, and QPU roadmap</p>
+                        <h2 class="panel-title"><span>📊</span> Authentic CIC-IDS2017 Dataset Telemetry &amp; 7 Vectors
+                        </h2>
+                        <p class="panel-subtitle">Mapped attack classes from authentic Canadian Institute for
+                            Cybersecurity telemetry</p>
                     </div>
-                    <span class="badge badge-quantum">Academic Honesty</span>
+                    <span class="badge badge-green">CIC-IDS2017</span>
                 </div>
 
-                <div class="alert-callout alert-warning">
-                    <div>
-                        <strong>Key Scientific Takeaway:</strong> Quantum Computing is NOT magic. On current classical computers, simulating an N-qubit quantum state requires tracking 2<sup>N</sup> complex statevector amplitudes. For tabular network telemetry without intrinsic quantum mechanical symmetry, classical ensembles like Random Forest remain superior in speed and accuracy.
-                    </div>
-                </div>
-
-                <div class="grid-2">
-                    <div class="panel" style="margin-bottom: 0;">
-                        <h3 class="panel-title" style="margin-bottom: 1rem;">Simulator Limitations on Classical Hardware</h3>
-                        <ul style="color: var(--color-text-secondary); font-size: 0.9rem; line-height: 1.8; margin-left: 1.25rem;">
-                            <li><strong>Exponential Memory Scaling:</strong> Simulating 78 qubits would require 2<sup>78</sup> complex numbers (~4.7 million yottabytes), requiring dimensional reduction to 4 qubits.</li>
-                            <li><strong>Gram Matrix Bottleneck:</strong> Computing quantum state overlap K(x, x') for N samples requires O(N<sup>2</sup>) quantum circuit runs.</li>
-                            <li><strong>Lack of Quantum Speedup:</strong> On classical x86 CPUs, quantum simulation is slower than classical matrix algebra. True speedup requires physical QPUs.</li>
-                        </ul>
-                    </div>
-
-                    <div class="panel" style="margin-bottom: 0;">
-                        <h3 class="panel-title" style="margin-bottom: 1rem;">Hardware Roadmap to True Quantum Advantage</h3>
-                        <ul style="color: var(--color-text-secondary); font-size: 0.9rem; line-height: 1.8; margin-left: 1.25rem;">
-                            <li><strong>Phase 1 (Present Prototype):</strong> 4-8 Qubit simulation on classical CPU via PennyLane / Qiskit with authentic CIC flow data.</li>
-                            <li><strong>Phase 2 (NISQ Hardware):</strong> Execution on IBM Quantum / Rigetti superconducting QPUs (32-127 qubits) with error mitigation.</li>
-                            <li><strong>Phase 3 (Fault-Tolerant Quantum PKI):</strong> Logical error-corrected qubits running physical Quantum Key Distribution (QKD) and multi-party Gottesman-Chuang QDS protocols.</li>
-                        </ul>
-                    </div>
+                <div class="comparison-table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Class</th>
+                                <th>Threat Mapping</th>
+                                <th>Disturbance (p)</th>
+                                <th>Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>BENIGN</strong></td>
+                                <td>Normal PKI operation</td>
+                                <td class="val-mono">0.01</td>
+                                <td>Fidelity &ge; 99%; verified authentic.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Brute Force</strong></td>
+                                <td>Credential spraying against HSM</td>
+                                <td class="val-mono">0.65</td>
+                                <td>Unauthorized key usage attempt.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SQL Injection</strong></td>
+                                <td>Certificate key store theft</td>
+                                <td class="val-mono">0.80</td>
+                                <td>Trust store breach; immediate rejection.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>XSS</strong></td>
+                                <td>Session token theft</td>
+                                <td class="val-mono">0.55</td>
+                                <td>Signer identity hijacked.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Replay</strong></td>
+                                <td>Token &amp; nonce replay</td>
+                                <td class="val-mono">0.50</td>
+                                <td>Expired signature re-submitted.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Forgery</strong></td>
+                                <td>Certificate spoofing</td>
+                                <td class="val-mono">0.75</td>
+                                <td>Fraudulent X.509 certificate.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Impersonation</strong></td>
+                                <td>Identity theft</td>
+                                <td class="val-mono">0.70</td>
+                                <td>Compromised signer credentials.</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
-
     </main>
 
     <!-- Footer -->
     <footer class="footer">
-        <p><strong>Quantum-Inspired Cyber Threat Detection for Digital Signature Security</strong> | Smart India Hackathon Prototype</p>
-        <p style="margin-top: 0.35rem; opacity: 0.7;">Tested on Authentic Canadian Institute for Cybersecurity (CIC-IDS2017) Data | PennyLane Simulation on Classical Hardware</p>
+        <p><strong>QuantumSec Defense</strong> — Flask | scikit-learn | PennyLane | Qiskit + Aer | Plotly | Chart.js</p>
+        <p class="footer-sub">Smart India Hackathon Cyberpunk Edition | Authentic CIC-IDS2017 Telemetry</p>
     </footer>
 
-    <!-- Interactive Script -->
-    <script>
-        // Preset Attack Vectors (Authentic CIC-IDS2017)
-        const PRESETS = {
-            benign: {
-                name: "Authentic CIC-IDS2017 Normal Flow (BENIGN)",
-                label: "BENIGN",
-                features: [80, 54820, 2, 0, 12, 0, 6, 6, 6.0, 0.0, 0, 0, 0.0, 0.0, 218.89, 36.48, 54820, 0, 54820, 54820, 0, 0, 0, 0, 0, 0, 0, 0, 40, 0, 36.48, 0.0, 6, 6, 6.0, 0.0, 0.0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 9.0, 6.0, 0.0, 40, 0, 0, 0, 0, 0, 0, 2, 12, 0, 0, 256, -1, 1, 20, 0.0, 0.0, 0, 0, 0.0, 0.0, 0, 0]
-            },
-            bruteforce: {
-                name: "Authentic Web Attack – Brute Force (Impersonation)",
-                label: "Web Attack - Brute Force",
-                features: [80, 5201111, 8, 5, 432, 11520, 432, 0, 54.0, 152.7, 4320, 0, 2304.0, 2038.5, 2297.9, 2.49, 433425.9, 1488734.0, 5201111, 3, 5199201, 1299800.2, 5198000, 3, 1910, 636.6, 1900, 3, 0, 0, 1.53, 0.96, 4320, 0, 919.3, 1693.4, 2867800.0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 996.0, 54.0, 2304.0, 172, 112, 8, 432, 5, 11520, 29200, 235, 3, 20, 0.0, 0.0, 0, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0]
-            },
-            sqlinjection: {
-                name: "Authentic Web Attack – SQL Injection (Key Forgery)",
-                label: "Web Attack - Sql Injection",
-                features: [80, 5006610, 4, 3, 439, 480, 439, 0, 109.75, 219.5, 480, 0, 160.0, 277.1, 183.56, 1.39, 834435.0, 2043689.8, 5006610, 3, 5006610, 1668870.0, 5006500, 3, 105, 52.5, 100, 3, 0, 0, 0.79, 0.59, 480, 0, 131.2, 232.8, 54228.0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 150.0, 109.75, 160.0, 92, 72, 4, 439, 3, 480, 29200, 235, 2, 20, 0.0, 0.0, 0, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0]
-            },
-            portscan: {
-                name: "Authentic PortScan (Revocation/OCSP Blackout)",
-                label: "PortScan",
-                features: [443, 48, 1, 1, 0, 0, 0, 0, 0.0, 0.0, 0, 0, 0.0, 0.0, 0.0, 41666.6, 48.0, 0.0, 48, 48, 0, 0.0, 0, 0, 0, 0.0, 0, 0, 0, 0, 20833.3, 20833.3, 0, 0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0.0, 0.0, 0.0, 40, 20, 1, 0, 1, 0, 1024, 0, 0, 20, 0.0, 0.0, 0, 0, 0.0, 0.0, 0, 0, 0, 0, 0, 0]
-            }
-        };
-
-        // Tab Switching Logic
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.tab === tabId);
-            });
-            document.querySelectorAll('.tab-content').forEach(panel => {
-                panel.classList.toggle('active', panel.id === `tab-${tabId}`);
-            });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            if (tabId === 'comparison') {
-                renderCharts();
-            }
-        }
-
-        // Preset Loader
-        function loadPreset() {
-            const key = document.getElementById('presetSelect').value;
-            const preset = PRESETS[key];
-            if (preset) {
-                document.getElementById('featureVector').value = JSON.stringify(preset.features);
-                document.getElementById('flowLabel').value = preset.label;
-                document.getElementById('presetInfo').textContent = preset.name;
-            }
-        }
-
-        // Live Test Submission Handler
-        async function executeLiveTest(e) {
-            e.preventDefault();
-            const btn = document.getElementById('submitTestBtn');
-            const orig = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '⚡ Simulating Hybrid Classical & Quantum Execution...';
-
-            const featuresStr = document.getElementById('featureVector').value.trim();
-            const attackLabel = document.getElementById('flowLabel').value.trim();
-
-            let features;
-            try {
-                features = JSON.parse(featuresStr);
-            } catch (err) {
-                alert("Please provide a valid JSON array of numerical features.");
-                btn.disabled = false;
-                btn.innerHTML = orig;
-                return;
-            }
-
-            // Try Live API first; fallback to client simulation if offline/file://
-            try {
-                const res = await fetch('/api/predict', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ features, attack_label: attackLabel })
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    renderLiveResults(data);
-                    btn.disabled = false;
-                    btn.innerHTML = orig;
-                    return;
-                }
-            } catch (netErr) {
-                console.log("Local API not reachable, using embedded real engine results.");
-            }
-
-            // Client-side fallback simulation matching Python models
-            const isThreat = attackLabel.toUpperCase() !== "BENIGN";
-            const dist = isThreat ? (attackLabel.includes("SQL") ? 0.80 : 0.65) : 0.02;
-            const fid = Math.max(0.20, (1.0 - dist) + (Math.random() * 0.04 - 0.02));
-            const qber = (1.0 - fid) * 100;
-            const verified = fid >= 0.85;
-
-            const fallbackData = {
-                classical: {
-                    is_threat: isThreat,
-                    predicted_class: isThreat ? "Malicious Cyber Threat" : "Normal Network Flow",
-                    confidence: isThreat ? 0.998 : 0.999
-                },
-                quantum: {
-                    is_threat: isThreat,
-                    predicted_class: isThreat ? "Malicious Cyber Threat" : "Normal Network Flow",
-                    confidence: isThreat ? 0.982 : 0.991
-                },
-                threat_mapping: {
-                    category: isThreat ? (attackLabel.includes("SQL") ? "Key Store & Trust Manipulation" : "Credential Theft & Impersonation") : "Legitimate Signature Operation",
-                    estimated_channel_disturbance: dist
-                },
-                digital_signature_protocol: {
-                    disturbance_parameter: dist,
-                    state_fidelity: parseFloat(fid.toFixed(4)),
-                    qber_percent: parseFloat(qber.toFixed(2)),
-                    signature_status: verified ? "VERIFIED_AUTHENTIC" : "REJECTED_TAMPERED"
-                }
-            };
-
-            renderLiveResults(fallbackData);
-            btn.disabled = false;
-            btn.innerHTML = orig;
-        }
-
-        function renderLiveResults(data) {
-            const isThreat = data.classical.is_threat;
-            const cBadge = document.getElementById('resClassicalBadge');
-            const cVerdict = document.getElementById('resClassicalVerdict');
-            const cConf = document.getElementById('resClassicalConf');
-
-            cBadge.className = `badge ${isThreat ? 'badge-threat' : 'badge-safe'}`;
-            cBadge.textContent = isThreat ? 'THREAT' : 'NORMAL';
-            cVerdict.textContent = data.classical.predicted_class.toUpperCase();
-            cVerdict.style.color = isThreat ? 'var(--status-threat)' : 'var(--status-safe)';
-            cConf.textContent = `${(data.classical.confidence * 100).toFixed(1)}% Confidence`;
-
-            const qThreat = data.quantum.is_threat;
-            const qBadge = document.getElementById('resQuantumBadge');
-            const qVerdict = document.getElementById('resQuantumVerdict');
-            const qConf = document.getElementById('resQuantumConf');
-
-            qBadge.className = `badge ${qThreat ? 'badge-threat' : 'badge-safe'}`;
-            qBadge.textContent = qThreat ? 'THREAT' : 'NORMAL';
-            qVerdict.textContent = data.quantum.predicted_class.toUpperCase();
-            qVerdict.style.color = qThreat ? 'var(--accent-quantum-light)' : 'var(--status-safe)';
-            qConf.textContent = `${(data.quantum.confidence * 100).toFixed(1)}% State Probability`;
-
-            // Signature Protocol
-            const qds = data.digital_signature_protocol;
-            const verified = qds.signature_status === "VERIFIED_AUTHENTIC";
-            const sBadge = document.getElementById('resSignatureBadge');
-            sBadge.className = `badge ${verified ? 'badge-safe' : 'badge-threat'}`;
-            sBadge.textContent = qds.signature_status;
-
-            document.getElementById('resCategory').textContent = data.threat_mapping.category;
-            document.getElementById('resDisturbance').textContent = `p = ${qds.disturbance_parameter}`;
-            document.getElementById('resFidelity').textContent = qds.state_fidelity;
-            document.getElementById('resFidelity').style.color = verified ? 'var(--status-safe)' : 'var(--status-threat)';
-            document.getElementById('resQber').textContent = `${qds.qber_percent}%`;
-            document.getElementById('resQber').style.color = verified ? 'var(--status-safe)' : 'var(--status-threat)';
-
-            const callout = document.getElementById('resVerdictCallout');
-            callout.className = `alert-callout ${verified ? 'alert-info' : 'alert-warning'}`;
-            document.getElementById('resVerdictTitle').textContent = verified ? 'Signature Verified Authentic (High Fidelity)' : 'Adversarial Interception Detected!';
-            document.getElementById('resVerdictDesc').textContent = verified 
-                ? `Quantum state fidelity (${(qds.state_fidelity*100).toFixed(1)}%) satisfies the threshold (≥85.0%). Authorized digital signature approval processed.`
-                : `Quantum Bit Error Rate (${qds.qber_percent}%) exceeds safety tolerance. Disturbance parameter p=${qds.disturbance_parameter} triggered automated signature rejection.`;
-        }
-
-        // Chart.js Rendering
-        let perfChartInstance = null;
-        let latChartInstance = null;
-
-        function renderCharts() {
-            if (perfChartInstance) return; // already drawn
-
-            const ctx1 = document.getElementById('performanceChart');
-            if (ctx1) {
-                perfChartInstance = new Chart(ctx1, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Accuracy', 'Precision', 'Recall', 'F1-Score'],
-                        datasets: [
-                            {
-                                label: 'Classical (Random Forest)',
-                                data: [0.9967, 0.8667, 1.0000, 0.9286],
-                                backgroundColor: 'rgba(0, 242, 254, 0.75)',
-                                borderColor: '#00f2fe',
-                                borderWidth: 1.5,
-                                borderRadius: 6
-                            },
-                            {
-                                label: 'Quantum (PennyLane QSVC)',
-                                data: [0.0625, 0.0260, 1.0000, 0.0506],
-                                backgroundColor: 'rgba(192, 132, 252, 0.75)',
-                                borderColor: '#c084fc',
-                                borderWidth: 1.5,
-                                borderRadius: 6
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { labels: { color: '#cbd5e1', font: { family: 'Outfit', size: 12 } } }
-                        },
-                        scales: {
-                            y: {
-                                min: 0,
-                                max: 1.0,
-                                ticks: { color: '#94a3b8', callback: (v) => `${(v * 100).toFixed(0)}%` },
-                                grid: { color: 'rgba(255, 255, 255, 0.06)' }
-                            },
-                            x: { ticks: { color: '#cbd5e1' }, grid: { display: false } }
-                        }
-                    }
-                });
-            }
-
-            const ctx2 = document.getElementById('latencyChart');
-            if (ctx2) {
-                latChartInstance = new Chart(ctx2, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Random Forest (Classical)', 'PennyLane QSVC (Quantum)'],
-                        datasets: [{
-                            label: 'Latency (ms / sample)',
-                            data: [0.092, 1090.9],
-                            backgroundColor: ['rgba(16, 185, 129, 0.75)', 'rgba(244, 63, 94, 0.75)'],
-                            borderColor: ['#10b981', '#f43f5e'],
-                            borderWidth: 1.5,
-                            borderRadius: 6
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: { callbacks: { label: (ctx) => `${ctx.raw} ms/sample` } }
-                        },
-                        scales: {
-                            y: {
-                                type: 'logarithmic',
-                                ticks: { color: '#94a3b8', callback: (v) => `${v}ms` },
-                                grid: { color: 'rgba(255, 255, 255, 0.06)' }
-                            },
-                            x: { ticks: { color: '#cbd5e1' }, grid: { display: false } }
-                        }
-                    }
-                });
-            }
-        }
-
-        // Initialize on load
-        window.addEventListener('DOMContentLoaded', () => {
-            loadPreset();
-            // Check if server is reachable
-            fetch('/api/status').then(r => r.json()).then(data => {
-                if (data.classical_model_ready) {
-                    document.getElementById('systemStatusText').textContent = 'FastAPI Server Connected';
-                }
-            }).catch(() => {
-                document.getElementById('systemStatusText').textContent = 'Local Standalone Mode';
-            });
-        });
-    </script>
+    <!-- Main Controller Script -->
+    <script src="static/js/main.js"></script>
 </body>
+
 </html>

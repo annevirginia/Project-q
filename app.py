@@ -1,13 +1,19 @@
 """
 Quantum-Inspired Cyber Threat Detection for Digital Signature Security
-Master FastAPI Application & REST API Server.
+Flask Application & REST API Server.
+
+Tech Stack:
+- Backend: Python, Flask
+- Classical ML: scikit-learn (Random Forest)
+- Quantum ML: PennyLane, Qiskit, Aer
+- Visualization: Plotly, Chart.js
 """
 
 import os
 import sys
 import json
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, Optional
 import numpy as np
 import pandas as pd
 
@@ -18,19 +24,14 @@ if sys.platform == "win32":
     except Exception:
         pass
 
-from fastapi import FastAPI, Request, HTTPException, BackgroundTasks
-from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from pydantic import BaseModel
-import uvicorn
+from flask import Flask, request, render_template, jsonify, send_from_directory
 
 # Add current workspace to python path
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 if BASE_DIR not in sys.path:
     sys.path.insert(0, BASE_DIR)
 
-from src.data_loader import find_default_dataset, load_dataset, inspect_dataset
+from src.data_loader import find_default_dataset, load_dataset, inspect_dataset, augment_attack_types
 from src.preprocessing import ThreatDataPreprocessor
 from src.classical_model import ClassicalThreatClassifier
 from src.quantum_model import QuantumThreatClassifier
@@ -42,21 +43,20 @@ from src.evaluation import load_benchmark_results
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("QuantumSecApp")
 
-app = FastAPI(
-    title="Quantum-Inspired Cyber Threat Detection for Digital Signature Security",
-    description="SIH Research Prototype benchmarking Classical Machine Learning vs Quantum Machine Learning on authentic CIC cybersecurity data.",
-    version="1.0.0"
+app = Flask(
+    __name__,
+    static_folder=os.path.join(BASE_DIR, "static"),
+    template_folder=os.path.join(BASE_DIR, "templates")
 )
+app.config["SECRET_KEY"] = "quantumsec-defense-sih-prototype"
+app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-# Mount static and templates
-static_dir = os.path.join(BASE_DIR, "static")
-templates_dir = os.path.join(BASE_DIR, "templates")
-os.makedirs(static_dir, exist_ok=True)
-os.makedirs(templates_dir, exist_ok=True)
-
-app.mount("/static", StaticFiles(directory=static_dir), name="static")
-templates = Jinja2Templates(directory=templates_dir)
-templates.env.filters["number_format"] = lambda val: f"{int(val):,}" if isinstance(val, (int, float)) else str(val)
+@app.template_filter("number_format")
+def number_format_filter(val):
+    try:
+        return f"{int(val):,}"
+    except Exception:
+        return str(val)
 
 # Global in-memory cache for models and benchmark data
 GLOBAL_STATE: Dict[str, Any] = {
@@ -95,117 +95,96 @@ def load_persisted_state():
         logger.warning(f"Notice during state load: {e}")
 
 
-@app.on_event("startup")
-def on_startup():
-    load_persisted_state()
+# Load state on module import
+load_persisted_state()
 
 
 # --- HTML Page Routes ---
 
-@app.get("/", response_class=HTMLResponse)
-@app.get("/index.html", response_class=HTMLResponse)
-async def index_page(request: Request):
-    return templates.TemplateResponse("index.html", {
-        "request": request,
-        "active_page": "dashboard",
-        "benchmark_data": GLOBAL_STATE["benchmark_results"],
-        "dataset_stats": GLOBAL_STATE["dataset_stats"]
-    })
+@app.route("/")
+@app.route("/index.html")
+def index_page():
+    return render_template("index.html",
+        active_page="dashboard",
+        benchmark_data=GLOBAL_STATE["benchmark_results"],
+        dataset_stats=GLOBAL_STATE["dataset_stats"]
+    )
 
 
-@app.get("/dashboard", response_class=HTMLResponse)
-async def dashboard_page(request: Request):
-    return templates.TemplateResponse("dashboard.html", {
-        "request": request,
-        "active_page": "dashboard",
-        "benchmark_data": GLOBAL_STATE["benchmark_results"],
-        "dataset_stats": GLOBAL_STATE["dataset_stats"]
-    })
+@app.route("/dashboard")
+def dashboard_page():
+    return render_template("dashboard.html",
+        active_page="dashboard",
+        benchmark_data=GLOBAL_STATE["benchmark_results"],
+        dataset_stats=GLOBAL_STATE["dataset_stats"]
+    )
 
 
-@app.get("/dataset", response_class=HTMLResponse)
-async def dataset_page(request: Request):
+@app.route("/dataset")
+def dataset_page():
     stats = GLOBAL_STATE.get("dataset_stats") or {}
-    return templates.TemplateResponse("dataset.html", {
-        "request": request,
-        "active_page": "dataset",
-        "stats": stats
-    })
+    return render_template("dataset.html", active_page="dataset", stats=stats)
 
 
-@app.get("/classical", response_class=HTMLResponse)
-async def classical_page(request: Request):
+@app.route("/classical")
+def classical_page():
     b_data = GLOBAL_STATE.get("benchmark_results")
     model_data = b_data.get("classical") if b_data else None
-    return templates.TemplateResponse("classical.html", {
-        "request": request,
-        "active_page": "classical",
-        "model_data": model_data
-    })
+    return render_template("classical.html", active_page="classical", model_data=model_data)
 
 
-@app.get("/quantum", response_class=HTMLResponse)
-async def quantum_page(request: Request):
+@app.route("/quantum")
+def quantum_page():
     b_data = GLOBAL_STATE.get("benchmark_results")
     model_data = b_data.get("quantum") if b_data else None
-    return templates.TemplateResponse("quantum.html", {
-        "request": request,
-        "active_page": "quantum",
-        "model_data": model_data
-    })
+    return render_template("quantum.html", active_page="quantum", model_data=model_data)
 
 
-@app.get("/comparison", response_class=HTMLResponse)
-async def comparison_page(request: Request):
+@app.route("/comparison")
+def comparison_page():
     b_data = GLOBAL_STATE.get("benchmark_results")
-    return templates.TemplateResponse("comparison.html", {
-        "request": request,
-        "active_page": "comparison",
-        "benchmark_data": b_data,
-        "benchmark_data_json": json.dumps(b_data) if b_data else "{}"
-    })
+    return render_template("comparison.html",
+        active_page="comparison",
+        benchmark_data=b_data,
+        benchmark_data_json=json.dumps(b_data) if b_data else "{}"
+    )
 
 
-@app.get("/threat-detection", response_class=HTMLResponse)
-async def threat_detection_page(request: Request):
-    return templates.TemplateResponse("threat_detection.html", {
-        "request": request,
-        "active_page": "threat"
-    })
+@app.route("/threat-detection")
+def threat_detection_page():
+    return render_template("threat_detection.html", active_page="threat")
 
 
-@app.get("/scientific-report", response_class=HTMLResponse)
-async def scientific_report_page(request: Request):
-    return templates.TemplateResponse("scientific_report.html", {
-        "request": request,
-        "active_page": "scientific"
-    })
+@app.route("/scientific-report")
+def scientific_report_page():
+    return render_template("scientific_report.html", active_page="scientific")
 
 
 # --- API Endpoints ---
 
-class PredictionRequest(BaseModel):
-    features: List[float]
-    attack_label: Optional[str] = "BENIGN"
-
-
-@app.post("/api/predict")
-async def predict_packet(req: PredictionRequest):
+@app.route("/api/predict", methods=["POST"])
+def predict_packet():
     """
     Executes real inference across both classical and quantum models,
     evaluating threat probability and running the Quantum Digital Signature protocol.
     """
+    data = request.get_json()
+    if not data or "features" not in data:
+        return jsonify({"error": "Missing 'features' in request body"}), 400
+
+    features = data["features"]
+    attack_label = data.get("attack_label", "BENIGN")
+
     if GLOBAL_STATE["preprocessor"] is None or GLOBAL_STATE["classical_model"] is None:
-        raise HTTPException(
-            status_code=400,
-            detail="Models not loaded. Please execute the benchmark first to train classical and quantum models."
-        )
+        return jsonify({
+            "error": "Models not loaded. Please execute the benchmark first to train models."
+        }), 400
 
-    preprocessor: ThreatDataPreprocessor = GLOBAL_STATE["preprocessor"]
-    classical_clf: ClassicalThreatClassifier = GLOBAL_STATE["classical_model"]
-    quantum_clf: Optional[QuantumThreatClassifier] = GLOBAL_STATE.get("quantum_model")
+    preprocessor = GLOBAL_STATE["preprocessor"]
+    classical_clf = GLOBAL_STATE["classical_model"]
+    quantum_clf = GLOBAL_STATE.get("quantum_model")
 
-    raw_features = np.array(req.features, dtype=np.float32)
+    raw_features = np.array(features, dtype=np.float32)
     expected_dim = len(preprocessor.feature_names)
 
     # Pad or truncate if user provided different feature length
@@ -232,7 +211,6 @@ async def predict_packet(req: PredictionRequest):
         q_conf = float(q_proba[q_pred])
         q_threat_prob = float(q_proba[1])
     else:
-        # Fallback if quantum model is still training
         q_pred = c_pred
         q_conf = c_conf
         q_threat_prob = c_threat_prob
@@ -241,14 +219,14 @@ async def predict_packet(req: PredictionRequest):
     threat_info = DigitalSignatureThreatMapper.map_threat(
         is_threat=c_pred,
         confidence=c_conf,
-        raw_attack_label=req.attack_label
+        raw_attack_label=attack_label
     )
 
     # 4. Quantum Digital Signature (QDS) Bell-state Protocol Simulation
     qds = QuantumDigitalSignatureProtocol(threshold_fidelity=0.85)
     qds_sim = qds.simulate_transmission(disturbance_level=threat_info["estimated_channel_disturbance"])
 
-    return {
+    return jsonify({
         "status": "success",
         "classical": {
             "is_threat": bool(c_pred == 1),
@@ -265,66 +243,77 @@ async def predict_packet(req: PredictionRequest):
         },
         "threat_mapping": threat_info,
         "digital_signature_protocol": qds_sim
-    }
+    })
 
 
-class BenchmarkTriggerRequest(BaseModel):
-    sample_size: int = 3000
-    n_qubits: int = 4
-    quantum_method: str = "quantum_kernel"
-
-
-@app.post("/api/run_benchmark")
-async def trigger_benchmark(req: BenchmarkTriggerRequest):
+@app.route("/api/run_benchmark", methods=["POST"])
+def trigger_benchmark():
     """Executes the full benchmark pipeline on real CIC records."""
+    data = request.get_json() or {}
+    sample_size = data.get("sample_size", 3000)
+    n_qubits = data.get("n_qubits", 4)
+    quantum_method = data.get("quantum_method", "quantum_kernel")
+
     dataset_path = find_default_dataset()
     if not dataset_path:
-        raise HTTPException(
-            status_code=404,
-            detail="No CIC dataset file found in data/raw/. Please run data/download_dataset.py first."
-        )
+        return jsonify({
+            "error": "No CIC dataset file found in data/raw/. Please add a dataset first."
+        }), 404
 
-    logger.info(f"Starting benchmark execution: sample_size={req.sample_size}, qubits={req.n_qubits}...")
+    logger.info(f"Starting benchmark: sample_size={sample_size}, qubits={n_qubits}...")
     df = load_dataset(dataset_path)
+    
+    # Augment with additional attack types
+    df = augment_attack_types(df)
+    logger.info(f"Dataset augmented to {len(df)} records with {df['Label'].nunique()} attack types.")
     
     results = run_benchmark(
         df=df,
-        sample_size=req.sample_size,
-        n_qubits=req.n_qubits,
-        quantum_method=req.quantum_method
+        sample_size=sample_size,
+        n_qubits=n_qubits,
+        quantum_method=quantum_method
     )
     
     # Reload in-memory state
     load_persisted_state()
     
-    return {
+    return jsonify({
         "status": "success",
-        "message": f"Benchmark completed successfully for {results['records_processed']} records.",
+        "message": f"Benchmark completed for {results['records_processed']} records.",
         "winner": results["comparison_summary"]["winner_model"],
         "classical_accuracy": results["classical"]["metrics"]["accuracy"],
         "quantum_accuracy": results["quantum"]["metrics"]["accuracy"]
-    }
+    })
 
 
-@app.get("/api/status")
-async def get_system_status():
+@app.route("/api/status")
+def get_system_status():
     """Returns active system status."""
-    return {
+    return jsonify({
         "dataset_loaded": GLOBAL_STATE["dataset_stats"] is not None,
         "classical_model_ready": GLOBAL_STATE["classical_model"] is not None,
         "quantum_model_ready": GLOBAL_STATE["quantum_model"] is not None,
         "benchmark_ready": GLOBAL_STATE["benchmark_results"] is not None,
-        "active_dataset": find_default_dataset()
-    }
+        "active_dataset": find_default_dataset(),
+        "tech_stack": {
+            "backend": "Flask",
+            "classical_ml": "scikit-learn (Random Forest)",
+            "quantum_ml": "PennyLane + Qiskit + Aer",
+            "visualization": "Plotly + Chart.js",
+            "frontend": "HTML + CSS + JavaScript"
+        }
+    })
 
 
 def main():
-    """Runs the FastAPI server locally with Uvicorn."""
-    print("===================================================================")
-    print("Starting Quantum-Inspired Threat Detection & Digital Signature Defense")
-    print("Server URL: http://127.0.0.1:8000")
-    print("===================================================================")
-    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=False)
+    """Runs the Flask server locally."""
+    print("=" * 67)
+    print("QuantumSec Defense — Digital Signature Security Platform")
+    print("-" * 67)
+    print("Tech: Flask | scikit-learn | PennyLane | Qiskit | Aer | Plotly")
+    print("Server: http://127.0.0.1:5000")
+    print("=" * 67)
+    app.run(host="127.0.0.1", port=5000, debug=False)
 
 
 if __name__ == "__main__":
