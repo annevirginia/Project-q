@@ -1,641 +1,1334 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}QuantumSec Defense | Cyberpunk Digital Signature Platform{% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumSec Defense</title>
+    <meta name="description"
+        content="QuantumSec Defense v2: Unified Post-Quantum Cryptographic Operations &amp; Cyber Threat Security Console. Benchmarking Classical Random Forest vs PennyLane QSVC, Mosca's Theorem HNDL Simulator, Attack Surface Topology, and WebCrypto Toolkit.">
 
-{% block content %}
-<!-- Cyberpunk Tech Stack Highlight Banner -->
-<div class="stack-banner">
-    <span class="stack-chip stack-chip-cyan">💻 Backend: Python &amp; Flask</span>
-    <span class="stack-chip stack-chip-green">🌲 Classical ML: scikit-learn (Random Forest)</span>
-    <span class="stack-chip stack-chip-pink">⚛️ Quantum: PennyLane, Qiskit &amp; Aer</span>
-    <span class="stack-chip stack-chip-yellow">📊 Viz: Plotly &amp; Chart.js</span>
-    <span class="stack-chip stack-chip-purple">🔐 Cryptography: RSA-2048 &amp; Bell-State QDS</span>
-    <span class="stack-chip stack-chip-pink">🎯 7 Cyber Threat Vectors</span>
-</div>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
 
-<!-- ================================================================= -->
-<!-- SECTION 1: HERO & SUMMARY METRICS                                 -->
-<!-- ================================================================= -->
-<section>
-    <div class="hero-banner">
-        <div class="hero-tag">⚛️ SIH Cyber-Innovation Prototype</div>
-        <h2 class="hero-title">Quantum-Inspired Threat Detection &amp; Digital Signature Defense</h2>
-        <p class="hero-subtitle">
-            An end-to-end cyberpunk security operations console benchmarking <strong>Classical ML (scikit-learn Random Forest)</strong> against 
-            genuine <strong>Quantum ML (PennyLane QSVC + Qiskit Aer)</strong> circuits on authentic <strong>CIC-IDS2017</strong> telemetry, 
-            safeguarding critical enterprise PKI with interactive RSA-2048 cryptography, X.509 certificate generation, and real-time Bell-state entanglement validation.
-        </p>
-    </div>
+    <!-- Visualization Libraries (Chart.js & Plotly) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 
-    <!-- Quick Stats 4-Grid -->
-    <div class="grid-cards-4">
-        <div class="metric-card">
-            <div class="metric-header"><span class="metric-title">CIC-IDS2017 Telemetry</span><span class="metric-icon">📁</span></div>
-            <div class="metric-value">5,104</div>
-            <div class="metric-footer"><span class="badge badge-cyan">Authentic Telemetry</span><span>78 Features</span></div>
-        </div>
-        <div class="metric-card">
-            <div class="metric-header"><span class="metric-title">Classical ML (RF)</span><span class="metric-icon">💻</span></div>
-            <div class="metric-value">99.67%</div>
-            <div class="metric-footer"><span class="badge badge-safe">F1: 0.9286</span><span>0.092 ms / sample</span></div>
-        </div>
-        <div class="metric-card">
-            <div class="metric-header"><span class="metric-title">Quantum ML (QSVC)</span><span class="metric-icon">⚛️</span></div>
-            <div class="metric-value">6.25%</div>
-            <div class="metric-footer"><span class="badge badge-quantum">4 Qubits</span><span>F1: 0.0506</span></div>
-        </div>
-        <div class="metric-card">
-            <div class="metric-header"><span class="metric-title">Attack Classifications</span><span class="metric-icon">🎯</span></div>
-            <div class="metric-value">7 Vectors</div>
-            <div class="metric-footer"><span class="badge badge-warning">Multi-Class</span><span>Replay, Forgery &amp; Impersonation</span></div>
-        </div>
-    </div>
-</section>
+    <!-- Custom Cyberpunk Design System -->
+    <link rel="stylesheet" href="static/css/style.css?v=4">
+    <style>
+        .chart-box {
+            position: relative;
+            width: 100%;
+            height: 220px !important;
+            max-height: 240px !important;
+        }
 
-<!-- ================================================================= -->
-<!-- SECTION 2: CLASSICAL VS QUANTUM COMPARISON (ONE INTERFACE)        -->
-<!-- ================================================================= -->
-<section id="comparison">
-    <div class="panel panel-cyber-cyan">
-        <div class="panel-header">
-            <div>
-                <h2 class="panel-title"><span>⚖️</span> Classical vs Quantum — Side-by-Side Comparison</h2>
-                <p class="panel-subtitle">Head-to-head empirical benchmark on authentic CIC-IDS2017 telemetry in a single interface</p>
-            </div>
-            <span class="badge badge-cyan">Unified Benchmark</span>
-        </div>
+        .chart-box canvas {
+            max-height: 220px !important;
+        }
 
-        <!-- Full Metrics Comparison Table -->
-        <div class="comparison-table-wrapper">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Benchmark Metric</th>
-                        <th>💻 Classical ML (Random Forest)</th>
-                        <th>⚛️ Quantum ML (PennyLane QSVC + Qiskit Aer)</th>
-                        <th>Advantage / Verdict</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Test Accuracy</strong></td>
-                        <td class="val-mono">99.67%</td>
-                        <td class="val-mono">6.25%</td>
-                        <td><span class="badge badge-safe">+93.42% Classical</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Precision</strong></td>
-                        <td class="val-mono">86.67%</td>
-                        <td class="val-mono">2.60%</td>
-                        <td><span class="badge badge-safe">+84.07% Classical</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Recall</strong></td>
-                        <td class="val-mono">100.00%</td>
-                        <td class="val-mono">100.00%</td>
-                        <td><span class="badge badge-cyan">Parity (100% Caught)</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>F1-Score</strong></td>
-                        <td class="val-mono">0.9286</td>
-                        <td class="val-mono">0.0506</td>
-                        <td><span class="badge badge-safe">Winner: Classical (+0.878)</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Training Duration</strong></td>
-                        <td class="val-mono">0.56 seconds</td>
-                        <td class="val-mono">66.81 seconds</td>
-                        <td><span class="badge badge-safe">119x Faster</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Inference Latency</strong></td>
-                        <td class="val-mono">0.092 ms / sample</td>
-                        <td class="val-mono">1,090.9 ms / sample</td>
-                        <td><span class="badge badge-safe">14,500x Faster</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        #plotlyHeatmap.chart-box {
+            height: 180px !important;
+            max-height: 190px !important;
+        }
 
-        <!-- Matrix & Circuit 2-Grid -->
-        <div class="grid-2">
-            <div>
-                <h4 class="form-label">💻 Classical — Confusion Matrix (598 Test Flows)</h4>
-                <div class="comparison-table-wrapper">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Actual</th>
-                                <th>Pred: Normal</th>
-                                <th>Pred: Malicious</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Normal (585)</strong></td>
-                                <td class="val-mono">583 (TN)</td>
-                                <td class="val-mono">2 (FP)</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Threat (13)</strong></td>
-                                <td class="val-mono">0 (FN)</td>
-                                <td class="val-mono">13 (TP)</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="chart-box">
-                    <canvas id="perfChart"></canvas>
-                </div>
-            </div>
+        .section-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
 
-            <div>
-                <h4 class="form-label">⚛️ Quantum Circuit — PennyLane 4-Qubit Topology</h4>
-                <div class="circuit-ascii-box">
-0: ──RY(θ)─╭●───────╭X──RZ(θ)──RZ(θ)†─╭X†─────RY(θ)†─┤ ╭Probs
-1: ──RY(θ)─╰X─╭●────│───RZ(θ)──RZ(θ)†─│──╭X†──RY(θ)†─┤ ├Probs
-2: ──RY(θ)────╰X─╭●─│───RZ(θ)──RZ(θ)†─│──╰X†─RY(θ)†──┤ ├Probs
-3: ──RY(θ)───────╰X─╰●──RZ(θ)──RZ(θ)†─╰X†─RY(θ)†─────┤ ╰Probs</div>
-                <div class="chart-box">
-                    <canvas id="latChart"></canvas>
-                </div>
-            </div>
-        </div>
+        .compact-table th,
+        .compact-table td {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
 
-        <!-- Plotly Interactive Heatmap -->
-        <div class="panel panel-cyber-pink">
-            <div class="panel-header">
-                <div>
-                    <h3 class="panel-title"><span>📈</span> Threat Disturbance &amp; Quantum Fidelity Matrix</h3>
-                    <p class="panel-subtitle">Interactive matrix showing Channel Disturbance, Bell-state Fidelity, and QBER across all 7 attack vectors</p>
-                </div>
-                <span class="badge badge-pink">Plotly Matrix</span>
-            </div>
-            <div id="plotlyHeatmap" class="chart-box"></div>
-        </div>
-
-        <div class="alert-callout alert-info">
-            <div>
-                <strong>🔬 Scientific Honesty Verdict:</strong> 
-                Classical Random Forest achieves superior F1 (0.9286 vs 0.0506) and 14,500x faster execution than CPU-simulated quantum circuits. Simulating 78 qubits classically requires 2<sup>78</sup> complex amplitudes; true quantum advantage requires physical QPUs with error-mitigated hardware.
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ================================================================= -->
-<!-- SECTION 3: DIGITAL SIGNATURE & CRYPTOGRAPHY TOOLKIT               -->
-<!-- ================================================================= -->
-<section id="crypto">
-    <div class="panel panel-cyber-yellow">
-        <div class="panel-header">
-            <div>
-                <h2 class="panel-title"><span>🔐</span> Digital Signature &amp; Cryptography Toolkit</h2>
-                <p class="panel-subtitle">Hardware-accelerated RSA-2048 key generation, signing, verification, encryption, decryption, SHA-256 hash &amp; quantum noise</p>
-            </div>
-            <span class="badge badge-warning">Web Crypto API</span>
-        </div>
-
-        <!-- Subtabs -->
-        <div class="btn-row" id="cryptoTabs">
-            <button type="button" class="btn btn-primary btn-sm crypto-tab-btn active" data-cp="keygen" onclick="switchCryptoTab('keygen')" title="Switch to RSA Key Generation">🔑 Key Gen</button>
-            <button type="button" class="btn btn-secondary btn-sm crypto-tab-btn" data-cp="sign" onclick="switchCryptoTab('sign')" title="Switch to Digital Signature Sign &amp; Verify">✍️ Sign &amp; Verify</button>
-            <button type="button" class="btn btn-secondary btn-sm crypto-tab-btn" data-cp="enc" onclick="switchCryptoTab('enc')" title="Switch to RSA Encryption &amp; Decryption">🔒 Encrypt/Decrypt</button>
-            <button type="button" class="btn btn-secondary btn-sm crypto-tab-btn" data-cp="hash" onclick="switchCryptoTab('hash')" title="Switch to SHA-256 Hash Digest">🧬 SHA-256 &amp; Avalanche</button>
-            <button type="button" class="btn btn-secondary btn-sm crypto-tab-btn" data-cp="cert" onclick="switchCryptoTab('cert')" title="Switch to X.509 Certificate Inspector">📜 X.509 Certificate</button>
-            <button type="button" class="btn btn-secondary btn-sm crypto-tab-btn" data-cp="qsim" onclick="switchCryptoTab('qsim')" title="Switch to Quantum Depolarizing Noise Simulator">⚛️ Quantum Noise Sim</button>
-            <button type="button" class="btn btn-secondary btn-sm crypto-tab-btn" data-cp="qkd" onclick="switchCryptoTab('qkd')" title="Switch to QKD BB84 Key Distribution Simulator">🛰️ QKD BB84</button>
-        </div>
-
-        <!-- 1. Key Gen -->
-        <div class="crypto-panel" id="cp-keygen">
-            <div class="panel">
-                <div class="panel-header">
-                    <div>
-                        <h4 class="panel-title">🔑 RSA-2048 Key Pair Generator</h4>
-                        <p class="panel-subtitle">Browser-native asymmetric cryptographic key generation</p>
+<body>
+    <div class="app-layout">
+        <!-- ═══ VERTICAL LEFT CYBER SIDEBAR ═══ -->
+        <aside class="sidebar-cyber" id="sidebar">
+            <div class="sidebar-header">
+                <a href="#overview" class="sidebar-brand-wrapper" title="QuantumSec Defense v2 Security Console">
+                    <div class="brand-icon">⚛</div>
+                    <div class="brand-text">
+                        <h1>QuantumSec Defense</h1>
+                        <span>Security Console</span>
                     </div>
-                    <div>
-                        <button type="button" class="btn btn-primary" id="btnGenKeys" onclick="generateRSAKeys()" title="Generate new 2048-bit RSA key pair">🔑 Generate RSA-2048 Keys</button>
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyCryptoElement('pubKeyOut')" title="Copy Public Key to Clipboard">📋 Copy Public</button>
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyCryptoElement('privKeyOut')" title="Copy Private Key to Clipboard">📋 Copy Private</button>
+                </a>
+            </div>
+
+            <!-- Dataset Profile Switcher & System Status -->
+            <div class="sidebar-controls">
+                <div class="profile-switcher-wrap" style="width:100%;">
+                    <label for="profileSelectTop">Profiles</label>
+                    <select id="profileSelectTop" class="profile-select" style="width:100%;margin-top:3px;"
+                        onchange="switchDatasetProfile(this.value)" title="Switch synthetic dataset profile">
+                        <option value="A" selected>Profile A: Legacy Enterprise</option>
+                        <option value="B">Profile B: Mixed Transition</option>
+                        <option value="C">Profile C: PQC Migration Program</option>
+                        <option value="D">Profile D: Stress-Test Exposure</option>
+                    </select>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:0.4rem;margin-top:2px;">
+                    <span class="badge badge-safe" id="systemStatusBadge" style="font-size:0.68rem;">●
+                        Connecting...</span>
+                    <button type="button" class="btn btn-secondary btn-sm"
+                        style="padding:0.25rem 0.55rem;font-size:0.72rem;" onclick="resetSimulationState()"
+                        title="Reset simulation to default Profile A">🔄 Reset</button>
+                </div>
+            </div>
+
+            <!-- Vertical Navigation Menu -->
+            <nav class="sidebar-nav" aria-label="Security Console Navigation">
+                <a href="#overview" class="sidebar-nav-link active" data-nav="overview"><span
+                        class="sidebar-nav-icon">📊</span> Overview &amp; KPIs</a>
+                <a href="#comparison" class="sidebar-nav-link" data-nav="comparison"><span
+                        class="sidebar-nav-icon">⚖️</span> Classical vs Quantum</a>
+                <a href="#threat" class="sidebar-nav-link" data-nav="threat"><span class="sidebar-nav-icon">🛡️</span>
+                    Live Threat Console</a>
+                <a href="#inventory" class="sidebar-nav-link" data-nav="inventory"><span
+                        class="sidebar-nav-icon">🔍</span> Crypto Inventory</a>
+                <a href="#lifecycle" class="sidebar-nav-link" data-nav="lifecycle"><span
+                        class="sidebar-nav-icon">⏳</span> HNDL &amp; Mosca</a>
+                <a href="#risk" class="sidebar-nav-link" data-nav="risk"><span class="sidebar-nav-icon">⚠️</span> Risk
+                    &amp; Agility</a>
+                <a href="#topology" class="sidebar-nav-link" data-nav="topology"><span
+                        class="sidebar-nav-icon">🕸️</span> Attack Surface</a>
+                <a href="#signatures" class="sidebar-nav-link" data-nav="signatures"><span
+                        class="sidebar-nav-icon">✍️</span> Signature Forensics</a>
+                <a href="#ledger" class="sidebar-nav-link" data-nav="ledger"><span class="sidebar-nav-icon">⛓️</span>
+                    Blockchain Ledger</a>
+                <a href="#migration" class="sidebar-nav-link" data-nav="migration"><span
+                        class="sidebar-nav-icon">🚀</span> Migration Planner</a>
+                <a href="#whatif" class="sidebar-nav-link" data-nav="whatif"><span class="sidebar-nav-icon">🔮</span>
+                    What-If Simulator</a>
+                <a href="#crypto" class="sidebar-nav-link" data-nav="crypto"><span class="sidebar-nav-icon">🔐</span>
+                    WebCrypto Toolkit</a>
+                <a href="#reports" class="sidebar-nav-link" data-nav="reports"><span class="sidebar-nav-icon">📑</span>
+                    Compliance &amp; Reports</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div>⚛️ Cyber-Defense Prototype</div>
+                <div style="margin-top:2px;opacity:0.75;">QuantumSec Security Console</div>
+            </div>
+        </aside>
+
+        <!-- ═══ MAIN CONTENT AREA (RIGHT SIDE) ═══ -->
+        <main class="main-content-layout">
+
+            <!-- Cyberpunk Stack Chips Banner -->
+            <div class="stack-banner" style="margin-bottom:1.5rem;">
+                <span class="stack-chip stack-chip-cyan">💻 Backend: Python &amp; Flask</span>
+                <span class="stack-chip stack-chip-green">🌲 Classical ML: scikit-learn (Random Forest 99.67%)</span>
+                <span class="stack-chip stack-chip-pink">⚛️ Quantum ML: PennyLane + Qiskit Aer</span>
+                <span class="stack-chip stack-chip-yellow">📜 Standards: FIPS 203 (ML-KEM) &amp; 204 (ML-DSA)</span>
+                <span class="stack-chip stack-chip-purple">⏳ Mosca HNDL: Active Timeline</span>
+                <span class="stack-chip stack-chip-cyan">🔐 Cryptography: RSA-2048 &amp; Bell-State QDS</span>
+                <span class="stack-chip stack-chip-pink">🎯 7 Threat Vectors</span>
+            </div>
+
+            <!-- ═══ SECTION 1: EXECUTIVE OVERVIEW & KPIS ═══ -->
+            <section id="overview" style="margin-bottom:3rem;">
+                <div class="hero-banner">
+                    <div class="hero-tag">⚛️ QuantumSec Defense</div>
+                    <h2 class="hero-title">Executive Operations &amp; Post-Quantum Security Console</h2>
+                    <p class="hero-subtitle">
+                        Benchmarking <strong>Classical ML (scikit-learn Random Forest)</strong> against
+                        <strong>Quantum ML (PennyLane QSVC + Qiskit Aer)</strong> on authentic
+                        <strong>CIC-IDS2017</strong> network flows, while actively monitoring cryptographic exposure
+                        under <strong>Mosca's Theorem ($X+Y &gt; Z$)</strong>, inventorying enterprise PKI assets,
+                        and planning NIST FIPS 203/204/205 post-quantum migrations.
+                    </p>
+                </div>
+
+                <!-- 8-Card Responsive KPI Deck -->
+                <div class="grid-cards-8" id="securityConsoleCardsDeck">
+                    <div class="metric-card-sm">
+                        <span class="metric-title">Total PKI Assets</span>
+                        <span class="metric-value" id="kpiTotalAssets">120</span>
+                        <span class="metric-footer"><span class="badge badge-cyan">Inventory Scanned</span></span>
+                    </div>
+                    <div class="metric-card-sm val-threat">
+                        <span class="metric-title">Quantum-Broken</span>
+                        <span class="metric-value" id="kpiQuantumBroken">78</span>
+                        <span class="metric-footer"><span class="badge badge-threat">Shor Vulnerable</span></span>
+                    </div>
+                    <div class="metric-card-sm val-safe">
+                        <span class="metric-title">PQC-Ready</span>
+                        <span class="metric-value" id="kpiPqcReady">24</span>
+                        <span class="metric-footer"><span class="badge badge-safe">Lattice / Hash</span></span>
+                    </div>
+                    <div class="metric-card-sm val-threat">
+                        <span class="metric-title">Critical Findings</span>
+                        <span class="metric-value" id="kpiCriticalFindings">38</span>
+                        <span class="metric-footer"><span class="badge badge-threat">Risk &ge; 75</span></span>
+                    </div>
+                    <div class="metric-card-sm val-warn">
+                        <span class="metric-title">HNDL Exposure</span>
+                        <span class="metric-value" id="kpiHndlExposure">42</span>
+                        <span class="metric-footer"><span class="badge badge-warning">Harvested Now</span></span>
+                    </div>
+                    <div class="metric-card-sm val-purple">
+                        <span class="metric-title">Agility Score</span>
+                        <span class="metric-value" id="kpiAgilityScore">44.7</span>
+                        <span class="metric-footer"><span class="badge badge-purple">Out of 100</span></span>
+                    </div>
+                    <div class="metric-card-sm val-safe">
+                        <span class="metric-title">Migration Done</span>
+                        <span class="metric-value" id="kpiMigrationPct">18.5%</span>
+                        <span class="metric-footer"><span class="badge badge-safe">FIPS Roadmap</span></span>
+                    </div>
+                    <div class="metric-card-sm">
+                        <span class="metric-title">Est. Budget</span>
+                        <span class="metric-value" id="kpiEstBudget">$1.85M</span>
+                        <span class="metric-footer"><span class="badge badge-cyan">Transition Cost</span></span>
                     </div>
                 </div>
+
+                <!-- Visual Charts: Risk Distribution + Quantum Status Breakdown -->
                 <div class="grid-2">
-                    <div>
-                        <label class="form-label" for="pubKeyOut">🔓 Public Key (SPKI Format)</label>
-                        <pre id="pubKeyOut" class="code-preview-box code-preview-cyan">Click 'Generate RSA-2048 Keys' to create key pair...</pre>
+                    <div class="panel panel-cyber-pink">
+                        <div class="panel-header">
+                            <div>
+                                <h3 class="panel-title"><span>⚠️</span> Cryptographic Risk Distribution</h3>
+                                <p class="panel-subtitle">Proportion of PKI assets grouped by Post-Quantum Risk Band</p>
+                            </div>
+                            <span class="badge badge-pink">Composite R-Score</span>
+                        </div>
+                        <div class="chart-container-doughnut">
+                            <canvas id="overviewRiskChart"></canvas>
+                        </div>
                     </div>
-                    <div>
-                        <label class="form-label" for="privKeyOut">🔒 Private Key (PKCS8 Format)</label>
-                        <pre id="privKeyOut" class="code-preview-box code-preview-pink">Click 'Generate RSA-2048 Keys' to create key pair...</pre>
+
+                    <div class="panel panel-cyber-cyan">
+                        <div class="panel-header">
+                            <div>
+                                <h3 class="panel-title"><span>⚛️</span> Quantum Vulnerability Status</h3>
+                                <p class="panel-subtitle">Classification across Shor/Grover broken, transition &amp;
+                                    resilient schemes</p>
+                            </div>
+                            <span class="badge badge-cyan">Algorithm Posture</span>
+                        </div>
+                        <div class="chart-container-clean">
+                            <canvas id="overviewQuantumStatusChart"></canvas>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- 2. Sign & Verify -->
-        <div class="crypto-panel" id="cp-sign">
-            <div class="panel">
-                <h4 class="panel-title">✍️ Digital Signature — RSASSA-PKCS1-v1_5 with SHA-256</h4>
-                <p class="panel-subtitle">Cryptographically signs document with private key; verifies with public key and instantly detects bit-tampering</p>
-
-                <div class="form-group">
-                    <label class="form-label" for="signMsgInput">Message / Payload to Sign</label>
-                    <textarea id="signMsgInput" class="form-control" rows="2" title="Message to Sign" placeholder="Enter message payload to digitally sign">QuantumSec Defense — Authentic Digital Certificate Approval #9842</textarea>
-                </div>
-                <div class="btn-row">
-                    <button type="button" class="btn btn-primary" onclick="signMessage()" title="Sign message using RSA private key">✍️ Sign Message</button>
-                    <button type="button" class="btn btn-secondary" onclick="verifySignature()" title="Verify digital signature using RSA public key">✅ Verify Signature</button>
-                    <button type="button" class="btn btn-pink" onclick="tamperSignature()" title="Simulate malicious tampering with signature bytes">💀 Tamper Signature</button>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="sigOutputHex">Generated Digital Signature (Hex)</label>
-                    <pre id="sigOutputHex" class="code-preview-box code-preview-pink">Awaiting signature...</pre>
-                </div>
-                <div id="sigVerificationResult"></div>
-            </div>
-        </div>
-
-        <!-- 3. Encrypt & Decrypt -->
-        <div class="crypto-panel" id="cp-enc">
-            <div class="panel">
-                <h4 class="panel-title">🔒 RSA-OAEP Encryption &amp; Decryption</h4>
-                <p class="panel-subtitle">End-to-end asymmetric encryption with public key; only the matching private key can decrypt</p>
-
-                <div class="form-group">
-                    <label class="form-label" for="encPlainInput">Plaintext Input</label>
-                    <textarea id="encPlainInput" class="form-control" rows="2" title="Plaintext Input" placeholder="Enter plaintext to encrypt">Top Secret: Quantum key distribution channel validated ✓</textarea>
-                </div>
-                <div class="btn-row">
-                    <button type="button" class="btn btn-primary" onclick="encryptPlaintext()" title="Encrypt with RSA Public Key">🔒 Encrypt (Public Key)</button>
-                    <button type="button" class="btn btn-secondary" onclick="decryptCiphertext()" title="Decrypt with RSA Private Key">🔓 Decrypt (Private Key)</button>
-                </div>
-                <div class="grid-2">
-                    <div>
-                        <label class="form-label" for="cipherOutputB64">🔒 Ciphertext (Base64)</label>
-                        <pre id="cipherOutputB64" class="code-preview-box code-preview-cyan">Awaiting encryption...</pre>
-                    </div>
-                    <div>
-                        <label class="form-label" for="decryptedOutputPlain">🔓 Recovered Plaintext</label>
-                        <pre id="decryptedOutputPlain" class="code-preview-box code-preview-green">Awaiting decryption...</pre>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 4. SHA-256 & Avalanche -->
-        <div class="crypto-panel" id="cp-hash">
-            <div class="panel">
-                <h4 class="panel-title">🧬 SHA-256 Hash Digest &amp; Avalanche Effect Engine</h4>
-                <p class="panel-subtitle">Deterministic cryptographic hashing showing real-time Avalanche bit dispersion</p>
-
-                <div class="avalanche-summary">
-                    <div class="avalanche-chip">
-                        <span>Flipped Bits (vs Baseline)</span>
-                        <span id="avalancheBitFlips">0 / 256 bits</span>
-                    </div>
-                    <div class="avalanche-chip">
-                        <span>Avalanche Ratio</span>
-                        <span id="avalanchePercent">0.0%</span>
-                    </div>
-                    <div class="avalanche-chip">
-                        <span>Baseline Digest</span>
-                        <span id="avalancheBaseHash" class="val-mono">b4905ff68c92efb9...</span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="hashInputText">Input Data (Type to watch real-time hash transformation)</label>
-                    <textarea id="hashInputText" class="form-control" rows="2" oninput="calculateSHA256()" title="Hash Input" placeholder="Type text to compute SHA-256">QuantumSec Defense</textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="hashOutputHex">SHA-256 Digest (Hex)</label>
-                    <pre id="hashOutputHex" class="code-preview-box code-preview-green"></pre>
-                </div>
-                <div class="alert-callout alert-warning">
-                    <div>
-                        <strong>🔬 Avalanche Effect:</strong> Changing a single character completely randomizes ~50% of the 256 bits in the output hash. This mathematical property guarantees digital signature non-repudiation and collision resistance.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 5. X.509 Certificate Inspector -->
-        <div class="crypto-panel" id="cp-cert">
-            <div class="panel">
-                <div class="panel-header">
-                    <div>
-                        <h4 class="panel-title">📜 X.509 Digital Certificate Inspector</h4>
-                        <p class="panel-subtitle">Standardized PKI Identity Certificate bound to generated RSA-2048 public key</p>
-                    </div>
-                    <div>
-                        <button type="button" class="btn btn-primary" onclick="generateX509Certificate()" title="Re-generate certificate with active keypair">📜 Refresh Certificate</button>
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="copyCryptoElement('x509CertView')" title="Copy Certificate to Clipboard">📋 Copy Certificate</button>
-                    </div>
-                </div>
-                <pre id="x509CertView" class="cert-box"></pre>
-            </div>
-        </div>
-
-        <!-- 6. Quantum Noise Simulator -->
-        <div class="crypto-panel" id="cp-qsim">
-            <div class="panel">
-                <h4 class="panel-title">⚛️ Quantum Depolarizing Channel Simulator</h4>
-                <p class="panel-subtitle">
-                    Simulate quantum channel noise: <code class="val-mono">ρ' = (1-p)ρ + (p/3)Σσρσ†</code>
-                </p>
-
-                <div class="form-group">
-                    <label class="form-label" for="noiseSlider">Noise Parameter (p):</label>
-                    <input type="range" id="noiseSlider" min="0" max="100" value="5" class="form-control" title="Depolarizing Channel Noise Parameter" aria-label="Depolarizing Channel Noise Parameter" oninput="updateQuantumSimulation()">
-                    <div id="noiseValLabel" class="val-mono">0.05</div>
-                </div>
-
-                <div class="grid-cards-4">
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">State Fidelity</span><span class="metric-icon">⚛️</span></div>
-                        <div id="simFidelityVal" class="metric-value">0.9625</div>
-                        <div class="metric-footer"><span>Threshold: &ge; 0.85</span></div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">QBER</span><span class="metric-icon">📉</span></div>
-                        <div id="simQberVal" class="metric-value">3.8%</div>
-                        <div class="metric-footer"><span>Tolerance: &le; 15%</span></div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">Signature Status</span><span class="metric-icon">🔐</span></div>
-                        <div id="simStatusVal" class="metric-value">VERIFIED</div>
-                        <div class="metric-footer"><span id="simStatusSub">Authentic</span></div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">Channel Security</span><span class="metric-icon">🛡️</span></div>
-                        <div id="simSecVal" class="metric-value">SECURE</div>
-                        <div class="metric-footer"><span id="simSecSub">Clean Channel</span></div>
-                    </div>
-                </div>
-
-                <div class="chart-box">
-                    <canvas id="simFidChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- 7. QKD BB84 Simulator -->
-        <div class="crypto-panel" id="cp-qkd">
-            <div class="panel">
-                <div class="panel-header">
-                    <div>
-                        <h4 class="panel-title">🛰️ Quantum Key Distribution (BB84 Protocol) Simulator</h4>
-                        <p class="panel-subtitle">Simulate Alice-Bob photon polarization exchange with real-time eavesdropper (Eve) detection</p>
-                    </div>
-                    <div class="btn-row">
-                        <label class="checkbox-cyber">
-                            <input type="checkbox" id="qkdEveIntercept" onchange="simulateQKD()" title="Toggle Eve Interception">
-                            <span>💀 Activate Eve Intercept</span>
-                        </label>
-                        <button type="button" class="btn btn-primary btn-sm" onclick="simulateQKD()" title="Generate new transmission">🎲 Transmit Photons</button>
-                    </div>
-                </div>
-
-                <div class="grid-cards-4">
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">QKD QBER</span><span class="metric-icon">📉</span></div>
-                        <div id="qkdQberVal" class="metric-value">0.0%</div>
-                        <div class="metric-footer"><span>Tolerance: &le; 11%</span></div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">Channel Status</span><span class="metric-icon">🔐</span></div>
-                        <div id="qkdStatusVal" class="metric-value">SECURE</div>
-                        <div class="metric-footer"><span>QDS Validation</span></div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">Sifted Shared Key</span><span class="metric-icon">🔑</span></div>
-                        <div id="qkdSiftedKey" class="metric-value val-mono">10110</div>
-                        <div class="metric-footer"><span>Identical Bits</span></div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">Photon Basis</span><span class="metric-icon">⚛️</span></div>
-                        <div class="metric-value">Rect / Diag</div>
-                        <div class="metric-footer"><span>+ and ×</span></div>
-                    </div>
-                </div>
-
-                <div class="comparison-table-wrapper">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Pulse #</th>
-                                <th>Alice Bit</th>
-                                <th>Alice Basis</th>
-                                <th>Bob Basis</th>
-                                <th>Bob Measured</th>
-                                <th>Basis Match?</th>
-                                <th>Key Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="qkdTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ================================================================= -->
-<!-- SECTION 4: LIVE CYBER THREAT DEFENSE CONSOLE                      -->
-<!-- ================================================================= -->
-<section id="threat">
-    <div class="panel panel-cyber-pink">
-        <div class="panel-header">
-            <div>
-                <h2 class="panel-title"><span>🛡️</span> Live Cyber Threat &amp; Digital Signature Console</h2>
-                <p class="panel-subtitle">Test network telemetry across 7 attack types with dual classical/quantum prediction &amp; QDS Bell-state verification</p>
-            </div>
-            <div class="btn-row">
-                <button type="button" class="btn btn-secondary btn-sm" onclick="exportSecurityAuditReport()" title="Export complete audit logs as JSON">📥 Export Audit (JSON)</button>
-                <span class="badge badge-pink">Live Defense</span>
-            </div>
-        </div>
-
-        <div class="panel">
-            <form id="liveTestForm" onsubmit="executeLiveTest(event)">
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label class="form-label" for="presetSelect">Attack Type Preset</label>
-                        <select id="presetSelect" class="form-control" title="Select Attack Type Preset" aria-label="Select Attack Type Preset" onchange="loadPreset()">
-                            <option value="benign">Normal Flow (BENIGN) - Standard PKI Operation</option>
-                            <option value="bruteforce" selected>Web Attack: Brute Force - Signing Impersonation</option>
-                            <option value="sqli">Web Attack: SQL Injection - Certificate Key Forgery</option>
-                            <option value="xss">Web Attack: XSS - Session Hijacking &amp; Auth Sniffing</option>
-                            <option value="replay">Replay Attack - Token Replay &amp; Nonce Bypass</option>
-                            <option value="forgery">Forgery Attack - Fraudulent X.509 Certificate Spoofing</option>
-                            <option value="impersonation">Impersonation Attack - Signer Identity Theft</option>
-                        </select>
-                        <small id="presetInfo" class="metric-footer">
-                            Authentic Web Attack – Brute Force (Impersonation)
-                        </small>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="flowLabel">Attack Context Label</label>
-                        <input type="text" id="flowLabel" class="form-control" value="Web Attack - Brute Force" title="Attack Context Label" placeholder="Enter attack context label">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="featureVector">Network Flow Vector (78 Numerical Features)</label>
-                    <textarea id="featureVector" class="form-control" rows="3" title="Network Flow Vector Features" placeholder="Enter 78 numerical flow features"></textarea>
-                </div>
-
-                <button type="submit" id="submitTestBtn" class="btn btn-primary" title="Execute real-time hybrid cyber defense prediction">
-                    ⚡ Execute Hybrid Cyber Defense Test
-                </button>
-            </form>
-        </div>
-
-        <div id="liveResultsBox">
-            <h3 class="panel-title">
-                <span>🔍</span> Real-Time Hybrid Threat &amp; Quantum Security Evaluation
-            </h3>
-
-            <div class="grid-2">
+            <!-- ═══ SECTION 2: CLASSICAL VS QUANTUM ML BENCHMARK ═══ -->
+            <section id="comparison" style="margin-bottom:3rem;">
                 <div class="panel panel-cyber-cyan">
                     <div class="panel-header">
                         <div>
-                            <h4 class="panel-title">Classical Model (Random Forest)</h4>
-                            <p class="panel-subtitle">66-Feature scikit-learn Ensemble Classifier</p>
+                            <h2 class="panel-title"><span>⚖️</span> Classical vs Quantum — Side-by-Side Benchmark</h2>
+                            <p class="panel-subtitle">Head-to-head empirical benchmark on authentic Canadian Institute
+                                for Cybersecurity (CIC-IDS2017) telemetry</p>
                         </div>
-                        <span id="resClassicalBadge" class="badge badge-threat">ATTACK DETECTED</span>
+                        <span class="badge badge-cyan">CIC-IDS2017 Benchmark</span>
                     </div>
-                    <div class="metric-value" id="resClassicalVerdict">MALICIOUS CYBER THREAT</div>
-                    <div class="metric-footer"><span id="resClassicalConf">99.8% Confidence</span><span>Latency: 0.092ms</span></div>
-                </div>
 
+                    <div class="comparison-table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Benchmark Metric</th>
+                                    <th>💻 Classical ML (Random Forest)</th>
+                                    <th>⚛️ Quantum ML (PennyLane QSVC + Qiskit Aer)</th>
+                                    <th>Advantage / Verdict</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Test Accuracy</strong></td>
+                                    <td class="val-mono">99.67%</td>
+                                    <td class="val-mono">6.25%</td>
+                                    <td><span class="badge badge-safe">+93.42% Classical</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Precision</strong></td>
+                                    <td class="val-mono">86.67%</td>
+                                    <td class="val-mono">2.60%</td>
+                                    <td><span class="badge badge-safe">+84.07% Classical</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Recall</strong></td>
+                                    <td class="val-mono">100.00%</td>
+                                    <td class="val-mono">100.00%</td>
+                                    <td><span class="badge badge-cyan">Parity (100% Caught)</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>F1-Score</strong></td>
+                                    <td class="val-mono">0.9286</td>
+                                    <td class="val-mono">0.0506</td>
+                                    <td><span class="badge badge-safe">Winner: Classical (+0.878)</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Training Duration</strong></td>
+                                    <td class="val-mono">0.56 seconds</td>
+                                    <td class="val-mono">66.81 seconds</td>
+                                    <td><span class="badge badge-safe">119x Faster</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Inference Latency</strong></td>
+                                    <td class="val-mono">0.092 ms / sample</td>
+                                    <td class="val-mono">1,090.9 ms / sample</td>
+                                    <td><span class="badge badge-safe">14,500x Faster</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Feature Scalability</strong></td>
+                                    <td>Full 78 Flow Features (CICFlowMeter)</td>
+                                    <td>4 Qubits (PCA Dimensionality Reduction)</td>
+                                    <td>Classical processes full network depth</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="grid-2" style="margin-top:1.5rem;">
+                        <div>
+                            <h4 class="panel-title" style="font-size:0.95rem;margin-bottom:0.75rem;">📊 Model
+                                Performance Comparison</h4>
+                            <div class="chart-box">
+                                <canvas id="perfChart"></canvas>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="panel-title" style="font-size:0.95rem;margin-bottom:0.75rem;">⚡ Inference Latency
+                                (Log Scale ms)</h4>
+                            <div class="chart-box">
+                                <canvas id="latChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:1.5rem;">
+                        <h4 class="panel-title" style="font-size:0.95rem;margin-bottom:0.75rem;">⚛️ Quantum Digital
+                            Signature Disturbance &amp; Fidelity Heatmap</h4>
+                        <div id="plotlyHeatmap" class="chart-box"></div>
+                    </div>
+
+                    <div class="alert-callout alert-info" style="margin-top:1rem;">
+                        <div>
+                            <strong>🔬 Scientific Verdict:</strong> Classical Random Forest achieves superior F1 (0.9286
+                            vs 0.0506) and 14,500x faster inference. True quantum advantage requires fault-tolerant
+                            physical QPU hardware; on today's classical backends, classical ML delivers real-time
+                            line-rate defense.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══ SECTION 3: LIVE THREAT CONSOLE & BELL-STATE QDS ═══ -->
+            <section id="threat" style="margin-bottom:3rem;">
+                <div class="panel panel-cyber-pink">
+                    <div class="panel-header">
+                        <div>
+                            <h2 class="panel-title"><span>🛡️</span> Live Cyber Threat Console &amp; Bell-State QDS</h2>
+                            <p class="panel-subtitle">Test across 7 authentic attack vectors with dual Classical &amp;
+                                Quantum classifiers + Bell-State Entanglement verification</p>
+                        </div>
+                        <div class="btn-row">
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="exportSecurityAuditReport()"
+                                title="Export complete audit logs as JSON">📥 Export Audit (JSON)</button>
+                            <span class="badge badge-pink">Live Defense</span>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <form id="liveTestForm" onsubmit="executeLiveTest(event)">
+                            <div class="grid-2">
+                                <div class="form-group">
+                                    <label class="form-label" for="presetSelect">Attack Preset Vector</label>
+                                    <select id="presetSelect" class="form-control" title="Select Attack Preset"
+                                        aria-label="Select Attack Preset" onchange="loadPreset()">
+                                        <option value="benign">Normal Flow (BENIGN) — Standard PKI ($p=0.01$)</option>
+                                        <option value="bruteforce" selected>Web Attack: Brute Force — Impersonation
+                                            ($p=0.65$)</option>
+                                        <option value="sqli">Web Attack: SQL Injection — Key Forgery ($p=0.80$)</option>
+                                        <option value="xss">Web Attack: XSS — Session Hijack ($p=0.55$)</option>
+                                        <option value="replay">Replay Attack — Token Replay ($p=0.50$)</option>
+                                        <option value="forgery">Forgery Attack — Certificate Spoofing ($p=0.75$)
+                                        </option>
+                                        <option value="impersonation">Impersonation Attack — Identity Theft ($p=0.70$)
+                                        </option>
+                                    </select>
+                                    <small id="presetInfo" class="metric-footer">Authentic Web Attack – Brute Force
+                                        (Impersonation)</small>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="flowLabel">Context Threat Label</label>
+                                    <input type="text" class="form-control" id="flowLabel"
+                                        value="Web Attack - Brute Force" title="Flow Label"
+                                        placeholder="Attack context label">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="featureVector">Network Flow Vector (78 CIC-IDS2017
+                                    Features)</label>
+                                <textarea class="form-control" id="featureVector" rows="2" title="Features Vector"
+                                    placeholder="Enter 78 numerical features"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" id="submitTestBtn"
+                                title="Run cyber defense simulation">
+                                ⚡ Execute Hybrid Cyber Defense Test
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Threat Evaluation Output -->
+                    <div id="liveResultsBox" style="margin-top:1rem;">
+                        <h3 class="panel-title" style="margin-bottom:0.75rem;"><span>🔍</span> Threat &amp; Quantum
+                            Security Evaluation</h3>
+
+                        <div class="grid-2">
+                            <div class="panel panel-cyber-cyan">
+                                <div class="panel-header">
+                                    <div>
+                                        <h4 class="panel-title">Classical (Random Forest)</h4>
+                                        <p class="panel-subtitle">scikit-learn 66-feature model</p>
+                                    </div>
+                                    <span class="badge badge-threat" id="resClassicalBadge">ATTACK DETECTED</span>
+                                </div>
+                                <div class="metric-value" id="resClassicalVerdict">MALICIOUS CYBER THREAT</div>
+                                <div class="metric-footer"><span id="resClassicalConf">99.8%
+                                        Confidence</span><span>Latency: 0.092ms</span></div>
+                            </div>
+
+                            <div class="panel panel-cyber-purple">
+                                <div class="panel-header">
+                                    <div>
+                                        <h4 class="panel-title">Quantum (PennyLane QSVC)</h4>
+                                        <p class="panel-subtitle">4-Qubit circuit on Qiskit Aer</p>
+                                    </div>
+                                    <span class="badge badge-threat" id="resQuantumBadge">QUANTUM THREAT</span>
+                                </div>
+                                <div class="metric-value" id="resQuantumVerdict">MALICIOUS CYBER THREAT</div>
+                                <div class="metric-footer"><span id="resQuantumConf">98.2% State
+                                        Probability</span><span>Simulated Qiskit Aer</span></div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-cyber-yellow" style="margin-top:1rem;">
+                            <div class="panel-header">
+                                <div>
+                                    <h4 class="panel-title">Digital Signature Security &amp; QDS Protocol</h4>
+                                    <p class="panel-subtitle">Bell-state entanglement channel verification
+                                        $|\Phi^+\rangle = \frac{|00\rangle + |11\rangle}{\sqrt{2}}$</p>
+                                </div>
+                                <span class="badge badge-threat" id="resSignatureBadge">REJECTED_TAMPERED</span>
+                            </div>
+                            <div class="grid-4" style="margin-top:0.75rem;">
+                                <div>
+                                    <span class="metric-title">Signature Status</span>
+                                    <div class="val-mono" style="font-weight:700;margin-top:4px;" id="resSigStatus">
+                                        REJECTED_TAMPERED</div>
+                                </div>
+                                <div>
+                                    <span class="metric-title">Entanglement Fidelity ($F$)</span>
+                                    <div class="val-mono" style="font-weight:700;margin-top:4px;color:var(--neon-pink);"
+                                        id="resSigFidelity">0.5125 (Threshold: 0.85)</div>
+                                </div>
+                                <div>
+                                    <span class="metric-title">Quantum Bit Error Rate (QBER)</span>
+                                    <div class="val-mono"
+                                        style="font-weight:700;margin-top:4px;color:var(--neon-yellow);"
+                                        id="resSigQBER">32.50%</div>
+                                </div>
+                                <div>
+                                    <span class="metric-title">Channel Disturbance ($p$)</span>
+                                    <div class="val-mono" style="font-weight:700;margin-top:4px;"
+                                        id="resSigDisturbance">0.6500</div>
+                                </div>
+                            </div>
+                            <div style="margin-top:0.75rem;padding:0.75rem;background:var(--cyber-bg-elevated);border-radius:var(--radius-sm);font-size:0.85rem;"
+                                id="resThreatDesc">
+                                Detected intrusion attempts to hijack authorized signer session tokens, corrupting
+                                Bell-state entanglement correlations below the 0.85 threshold.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══ SECTION 4: CRYPTOGRAPHIC ASSET INVENTORY (§4) ═══ -->
+            <section id="inventory" style="margin-bottom:3rem;">
+                <div class="panel panel-cyber-yellow">
+                    <div class="panel-header">
+                        <div>
+                            <h2 class="panel-title"><span>🔍</span> Cryptographic Asset Inventory &amp; Discovery (§4)
+                            </h2>
+                            <p class="panel-subtitle">Catalog of certificates, databases, APIs, SSH keys, VPN tunnels,
+                                and their quantum vulnerability posture</p>
+                        </div>
+                        <span class="badge badge-warning">Asset Scanner (§4)</span>
+                    </div>
+
+                    <!-- Table Filter & Search Toolbar -->
+                    <div class="table-toolbar">
+                        <div class="toolbar-group">
+                            <input type="text" id="inventorySearch" class="search-input"
+                                placeholder="Search asset ID, name, algorithm, owner..."
+                                oninput="filterInventoryTable()">
+                            <select id="filterAssetType" class="filter-select" onchange="filterInventoryTable()">
+                                <option value="">All Asset Types</option>
+                                <option value="certificate">Certificates</option>
+                                <option value="api">APIs</option>
+                                <option value="database">Databases</option>
+                                <option value="ssh_key">SSH Keys</option>
+                                <option value="vpn">VPN Tunnels</option>
+                                <option value="token">Tokens</option>
+                                <option value="backup">Backups</option>
+                            </select>
+                            <select id="filterQuantumStatus" class="filter-select" onchange="filterInventoryTable()">
+                                <option value="">All Quantum Statuses</option>
+                                <option value="quantum-broken">Quantum-Broken (Shor)</option>
+                                <option value="classically-broken">Classically-Broken</option>
+                                <option value="transition">Transition Hybrid</option>
+                                <option value="quantum-resilient">PQC Resilient</option>
+                            </select>
+                            <select id="filterRiskBand" class="filter-select" onchange="filterInventoryTable()">
+                                <option value="">All Risk Bands</option>
+                                <option value="Critical">Critical (&ge; 75)</option>
+                                <option value="High">High (50 - 74)</option>
+                                <option value="Medium">Medium (25 - 49)</option>
+                                <option value="Low">Low (&lt; 25)</option>
+                            </select>
+                        </div>
+                        <span style="font-size:0.8rem;color:var(--text-secondary);font-family:var(--font-mono);"
+                            id="inventoryMatchCount">Loading assets...</span>
+                    </div>
+
+                    <!-- Asset Table -->
+                    <div class="comparison-table-wrapper" style="max-height:480px;overflow-y:auto;">
+                        <table class="data-table compact-table" id="inventoryTable">
+                            <thead>
+                                <tr>
+                                    <th>Asset ID</th>
+                                    <th>Asset Name</th>
+                                    <th>Type</th>
+                                    <th>Algorithm / Key</th>
+                                    <th>Quantum Status</th>
+                                    <th>Risk Band</th>
+                                    <th>Classification</th>
+                                    <th>HNDL Exposed</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryTableBody">
+                                <tr>
+                                    <td colspan="9" style="text-align:center;color:var(--text-muted);">Loading asset
+                                        inventory...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══ SECTION 5: DATA LIFECYCLE & HNDL ENGINE (§6) ═══ -->
+            <section id="lifecycle" style="margin-bottom:3rem;">
                 <div class="panel panel-cyber-purple">
                     <div class="panel-header">
                         <div>
-                            <h4 class="panel-title">Quantum Model (PennyLane QSVC)</h4>
-                            <p class="panel-subtitle">4-Qubit Variational Quantum Classifier (Qiskit Aer)</p>
+                            <h2 class="panel-title"><span>⏳</span> Data Lifecycle &amp; Harvest Now Decrypt Later (HNDL)
+                                (§6)</h2>
+                            <p class="panel-subtitle">Evaluating exposure windows under Mosca's Theorem: If Shelf-Life
+                                ($X$) + Migration ($Y$) &gt; CRQC Arrival ($Z$), data is already compromised</p>
                         </div>
-                        <span id="resQuantumBadge" class="badge badge-threat">QUANTUM THREAT</span>
+                        <span class="badge badge-purple">Mosca's Theorem</span>
                     </div>
-                    <div class="metric-value" id="resQuantumVerdict">MALICIOUS CYBER THREAT</div>
-                    <div class="metric-footer"><span id="resQuantumConf">98.2% State Probability</span><span>Simulated Qiskit Aer</span></div>
+
+                    <div class="mosca-container">
+                        <div class="mosca-formula-banner">
+                            <div>
+                                <span
+                                    style="font-size:0.75rem;color:var(--text-secondary);text-transform:uppercase;">Mosca's
+                                    Vulnerability Theorem:</span>
+                                <div class="mosca-formula-text" id="moscaFormulaDisplay">X (10y) + Y (4y) = 14y &gt; Z
+                                    (7y) ➜ VULNERABLE</div>
+                            </div>
+                            <div id="moscaVerdictBadge">
+                                <span class="badge badge-critical">⚠️ CRITICAL HNDL EXPOSURE (+7 Years)</span>
+                            </div>
+                        </div>
+
+                        <!-- Sliders for interactive simulation -->
+                        <div class="grid-3">
+                            <div class="slider-control-group">
+                                <div class="slider-label-row">
+                                    <span>Sensitivity Lifespan ($X$)</span>
+                                    <span id="valShelfLife">10 Years</span>
+                                </div>
+                                <input type="range" id="sliderShelfLife" class="cyber-slider" min="1" max="25"
+                                    value="10" oninput="updateMoscaSimulator()">
+                                <small class="metric-footer">How long data remains secret</small>
+                            </div>
+                            <div class="slider-control-group">
+                                <div class="slider-label-row">
+                                    <span>Migration Time ($Y$)</span>
+                                    <span id="valMigrationTime">4 Years</span>
+                                </div>
+                                <input type="range" id="sliderMigrationTime" class="cyber-slider" min="1" max="12"
+                                    value="4" oninput="updateMoscaSimulator()">
+                                <small class="metric-footer">Time required to migrate to PQC</small>
+                            </div>
+                            <div class="slider-control-group">
+                                <div class="slider-label-row">
+                                    <span>CRQC Arrival Year ($Z$)</span>
+                                    <span id="valCrqcYear">2033 (7 Years)</span>
+                                </div>
+                                <input type="range" id="sliderCrqcYear" class="cyber-slider cyber-slider-pink"
+                                    min="2028" max="2045" value="2033" oninput="updateMoscaSimulator()">
+                                <small class="metric-footer">Cryptanalytically Relevant Quantum Computer</small>
+                            </div>
+                        </div>
+
+                        <!-- Visual Timeline Track -->
+                        <div class="mosca-timeline-track">
+                            <div class="timeline-bar timeline-bar-shelf" id="trackShelfBar" style="width:45%;">
+                                Shelf-Life (10y)</div>
+                            <div class="timeline-bar timeline-bar-migration" id="trackMigrationBar" style="width:25%;">
+                                Migration (4y)</div>
+                            <div class="timeline-marker-crqc" id="trackCrqcMarker" style="left:55%;"></div>
+                        </div>
+                        <div
+                            style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-muted);font-family:var(--font-mono);">
+                            <span>Current Year (2026)</span>
+                            <span id="timelineMidPoint">2033 (CRQC Arrival)</span>
+                            <span>2045 Horizon</span>
+                        </div>
+
+                        <!-- At-Risk Data breakdown -->
+                        <div class="grid-4" style="margin-top:1.5rem;">
+                            <div class="metric-card-sm val-threat">
+                                <span class="metric-title">Top Secret Exposed</span>
+                                <span class="metric-value">4.2 TB</span>
+                                <span class="metric-footer"><span class="badge badge-threat">Immediate
+                                        Threat</span></span>
+                            </div>
+                            <div class="metric-card-sm val-warn">
+                                <span class="metric-title">Restricted Exposed</span>
+                                <span class="metric-value">18.6 TB</span>
+                                <span class="metric-footer"><span class="badge badge-warning">High Impact</span></span>
+                            </div>
+                            <div class="metric-card-sm">
+                                <span class="metric-title">Confidential Exposed</span>
+                                <span class="metric-value">42.1 TB</span>
+                                <span class="metric-footer"><span class="badge badge-cyan">Business
+                                        Critical</span></span>
+                            </div>
+                            <div class="metric-card-sm val-safe">
+                                <span class="metric-title">Safe / Internal</span>
+                                <span class="metric-value">120.5 TB</span>
+                                <span class="metric-footer"><span class="badge badge-safe">Negligible Risk</span></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </section>
+
+            <!-- ═══ SECTION 6: QUANTUM RISK & AGILITY ENGINE (§5) ═══ -->
+            <section id="risk" style="margin-bottom:3rem;">
+                <div class="panel panel-cyber-cyan">
+                    <div class="panel-header">
+                        <div>
+                            <h2 class="panel-title"><span>⚠️</span> Quantum Risk Model &amp; Cryptographic Agility (§5)
+                            </h2>
+                            <p class="panel-subtitle">Composite risk formula: $R = 0.35 \cdot P_Q + 0.25 \cdot V_A +
+                                0.25 \cdot E_D + 0.15 \cdot C_I$ and agility radar breakdown</p>
+                        </div>
+                        <span class="badge badge-cyan">Agility Scorer (§5)</span>
+                    </div>
+
+                    <div class="grid-2">
+                        <div>
+                            <h3 class="panel-title" style="font-size:0.95rem;margin-bottom:0.75rem;">🕸️ Cryptographic
+                                Agility Dimensions</h3>
+                            <p class="panel-subtitle" style="margin-bottom:0.75rem;">Measuring hardware isolation,
+                                algorithm agility, key management &amp; automated discovery</p>
+                            <div class="chart-container-clean">
+                                <canvas id="agilityRadarChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="panel-title" style="font-size:0.95rem;margin-bottom:0.75rem;">🚨 Priority 1: Top
+                                Critical PKI Assets</h3>
+                            <p class="panel-subtitle" style="margin-bottom:0.75rem;">Assets requiring immediate NIST
+                                post-quantum remediation</p>
+                            <div class="comparison-table-wrapper" style="max-height:240px;overflow-y:auto;">
+                                <table class="data-table compact-table" id="criticalAssetsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Asset Name</th>
+                                            <th>Algorithm</th>
+                                            <th>Risk</th>
+                                            <th>Recommended Target</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="criticalAssetsTableBody">
+                                        <tr>
+                                            <td colspan="4" style="text-align:center;color:var(--text-muted);">Loading
+                                                critical assets...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══ SECTION 7: ATTACK SURFACE & DEPENDENCY TOPOLOGY (§7) ═══ -->
+            <section id="topology" style="margin-bottom:3rem;">
+                <div class="panel panel-cyber-pink">
+                    <div class="panel-header">
+                        <div>
+                            <h2 class="panel-title"><span>🕸️</span> Attack Surface &amp; Dependency Topology Graph (§7)
+                            </h2>
+                            <p class="panel-subtitle">Interactive visual topology mapping applications, APIs,
+                                certificates, and databases with blast radius analysis</p>
+                        </div>
+                        <span class="badge badge-pink">Blast Radius Map</span>
+                    </div>
+
+                    <div class="topology-container" id="topologyContainer">
+                        <div class="topology-overlay-controls">
+                            <button type="button" class="btn btn-secondary btn-sm"
+                                onclick="filterTopologyNodes('all')">🌐 All</button>
+                            <button type="button" class="btn btn-secondary btn-sm"
+                                onclick="filterTopologyNodes('critical')">🔴 Critical</button>
+                            <button type="button" class="btn btn-secondary btn-sm"
+                                onclick="filterTopologyNodes('pqc')">🟢 PQC Ready</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="zoomTopology(1.2)">🔍
+                                +</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="zoomTopology(0.8)">🔎
+                                -</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="resetTopologyZoom()">🔄
+                                Reset</button>
+                        </div>
+
+                        <!-- Native HTML5 Canvas Network Graph -->
+                        <canvas id="topologyCanvas" class="topology-canvas"></canvas>
+
+                        <!-- Plotly container if available -->
+                        <div id="topologyNetworkCanvas" style="display:none;width:100%;height:100%;"></div>
+
+                        <!-- Floating Hover Tooltip -->
+                        <div id="topologyTooltip"
+                            style="position:absolute;display:none;background:rgba(9,14,26,0.95);border:1px solid var(--neon-cyan-border);border-radius:4px;padding:6px 10px;font-size:0.75rem;pointer-events:none;z-index:30;box-shadow:0 0 15px rgba(0,240,255,0.25);">
+                        </div>
+
+                        <!-- Legend -->
+                        <div class="topology-legend">
+                            <div class="legend-item"><span class="legend-dot" style="background:#ff0055;"></span>
+                                Quantum-Broken (Shor)</div>
+                            <div class="legend-item"><span class="legend-dot" style="background:#f97316;"></span> High
+                                Exposure</div>
+                            <div class="legend-item"><span class="legend-dot" style="background:#ffe600;"></span>
+                                Transition Planned</div>
+                            <div class="legend-item"><span class="legend-dot" style="background:#00ff66;"></span> PQC
+                                Ready (Lattice)</div>
+                        </div>
+
+                        <!-- Node Inspector Drawer -->
+                        <div id="nodeInspectorDrawer" class="node-inspector-drawer">
+                            <div
+                                style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                                <strong id="nodeInspTitle" style="color:var(--neon-cyan);">Node Details</strong>
+                                <button type="button" onclick="closeNodeInspector()"
+                                    style="background:none;border:none;color:#fff;cursor:pointer;">✕</button>
+                            </div>
+                            <div id="nodeInspContent" style="color:var(--text-secondary);font-size:0.78rem;">Click a
+                                node to inspect blast radius.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══ SECTION 8: SIGNATURE FORENSICS & SHOR'S ALGORITHM (§10) ═══ -->
+            <section id="signatures" style="margin-bottom:3rem;">
+                <div class="panel panel-cyber-yellow">
+                    <div class="panel-header">
+                        <div>
+                            <h2 class="panel-title"><span>✍️</span> Digital Signature Forensics &amp; Shor Cryptanalysis
+                                (§10)</h2>
+                            <p class="panel-subtitle">Auditing enterprise signatures against polynomial-time Shor
+                                factorization $O((\log N)^3)$ and lattice replacements</p>
+                        </div>
+                        <span class="badge badge-warning">Signature Forensics</span>
+                    </div>
+
+                    <div class="comparison-table-wrapper" style="max-height:360px;overflow-y:auto;">
+                        <table class="data-table compact-table" id="signaturesTable">
+                            <thead>
+                                <tr>
+                                    <th>Signature ID</th>
+                                    <th>Context Document</th>
+                                    <th>Algorithm</th>
+                                    <th>Hash Type</th>
+                                    <th>Shor Vulnerable?</th>
+                                    <th>Forgeability Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="signaturesTableBody">
+                                <tr>
+                                    <td colspan="7" style="text-align:center;color:var(--text-muted);">Loading
+                                        signatures...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══ SECTION 9: BLOCKCHAIN MERKLE LEDGER SIMULATOR (§11) ═══ -->
+            <section id="ledger" style="margin-bottom:3rem;">
+                <div class="panel panel-cyber-green">
+                    <div class="panel-header">
+                        <div>
+                            <h2 class="panel-title"><span>⛓️</span> Blockchain Merkle Ledger Simulator (§11)</h2>
+                            <p class="panel-subtitle">Cryptographic transaction block chain integrity validation and
+                                post-quantum state migration (NIST ML-DSA-65)</p>
+                        </div>
+                        <div class="btn-row">
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="verifyLedgerIntegrity()">🔍
+                                Verify Hash Chain</button>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="simulateLedgerMigration()">🚀
+                                Migrate to Post-Quantum Ledger</button>
+                        </div>
+                    </div>
+
+                    <div id="ledgerMigrationAlert" style="display:none;margin-bottom:1rem;"
+                        class="alert-callout alert-info">
+                        <div id="ledgerMigrationAlertContent"></div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div>
+                            <h4 class="panel-title" style="font-size:0.95rem;margin-bottom:0.75rem;">Transaction Blocks
+                            </h4>
+                            <div class="comparison-table-wrapper" style="max-height:280px;overflow-y:auto;">
+                                <table class="data-table compact-table" id="ledgerTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Tx ID</th>
+                                            <th>Block</th>
+                                            <th>Sender / Receiver</th>
+                                            <th>Signature Scheme</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ledgerTableBody">
+                                        <tr>
+                                            <td colspan="5" style="text-align:center;color:var(--text-muted);">Loading
+                                                ledger...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="panel-title" style="font-size:0.95rem;margin-bottom:0.75rem;">Post-Quantum Ledger
+                                Transition Progress</h4>
+                            <div class="chart-container-clean">
+                                <canvas id="ledgerMigrationChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══ SECTION 10: PQC MIGRATION PLANNER & NIST ROADMAP (§8) ═══ -->
+            <section id="migration" style="margin-bottom:3rem;">
+                <div class="panel panel-cyber-cyan">
+                    <div class="panel-header">
+                        <div>
+                            <h2 class="panel-title"><span>🚀</span> Post-Quantum Migration Planner &amp; Task Queue (§8)
+                            </h2>
+                            <p class="panel-subtitle">Prioritized roadmap aligned with NIST FIPS 203 (ML-KEM), FIPS 204
+                                (ML-DSA), and FIPS 205 (SLH-DSA)</p>
+                        </div>
+                        <span class="badge badge-cyan">FIPS 203/204/205</span>
+                    </div>
+
+                    <!-- Phase Progress Bars -->
+                    <div class="grid-4" style="margin-bottom:1.25rem;">
+                        <div class="metric-card-sm">
+                            <span class="metric-title">Phase 1: Discovery</span>
+                            <div class="cyber-progress-track">
+                                <div class="cyber-progress-fill" style="width:100%;"></div>
+                            </div>
+                            <span class="metric-footer"><span>100% Complete</span></span>
+                        </div>
+                        <div class="metric-card-sm">
+                            <span class="metric-title">Phase 2: Hybrid Pilot</span>
+                            <div class="cyber-progress-track">
+                                <div class="cyber-progress-fill" style="width:65%;"></div>
+                            </div>
+                            <span class="metric-footer"><span>65% In-Progress</span></span>
+                        </div>
+                        <div class="metric-card-sm">
+                            <span class="metric-title">Phase 3: Pure PQC</span>
+                            <div class="cyber-progress-track">
+                                <div class="cyber-progress-fill" style="width:30%;"></div>
+                            </div>
+                            <span class="metric-footer"><span>30% Rollout</span></span>
+                        </div>
+                        <div class="metric-card-sm">
+                            <span class="metric-title">Phase 4: Deprecation</span>
+                            <div class="cyber-progress-track">
+                                <div class="cyber-progress-fill" style="width:12%;"></div>
+                            </div>
+                            <span class="metric-footer"><span>12% Deprecated</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Migration Tasks Table with interactive approval -->
+                    <div class="comparison-table-wrapper" style="max-height:360px;overflow-y:auto;">
+                        <table class="data-table compact-table" id="migrationTasksTable">
+                            <thead>
+                                <tr>
+                                    <th>Task ID</th>
+                                    <th>Target Asset</th>
+                                    <th>Current Algorithm</th>
+                                    <th>PQC Replacement</th>
+                                    <th>Phase</th>
+                                    <th>Cost ($)</th>
+                                    <th>Approval</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="migrationTasksTableBody">
+                                <tr>
+                                    <td colspan="8" style="text-align:center;color:var(--text-muted);">Loading migration
+                                        tasks...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══ SECTION 11: WHAT-IF SCENARIO SIMULATOR (§13) ═══ -->
+            <section id="whatif" style="margin-bottom:3rem;">
+                <div class="panel panel-cyber-purple">
+                    <div class="panel-header">
+                        <div>
+                            <h2 class="panel-title"><span>🔮</span> What-If Policy &amp; Threat Scenario Simulator (§13)
+                            </h2>
+                            <p class="panel-subtitle">Simulate accelerated CRQC timelines, budget surges, zero-trust
+                                enforcement, and sudden cryptanalytic breaks</p>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="runWhatIfSimulation()">⚡ Run
+                            What-If Simulation</button>
+                    </div>
+
+                    <div class="grid-3" style="margin-bottom:1.5rem;">
+                        <div class="slider-control-group">
+                            <div class="slider-label-row">
+                                <span>Accelerated CRQC Arrival</span>
+                                <span id="lblWhatifCrqc">2030</span>
+                            </div>
+                            <input type="range" id="sliderWhatifCrqc" class="cyber-slider cyber-slider-pink" min="2028"
+                                max="2040" value="2030"
+                                oninput="document.getElementById('lblWhatifCrqc').textContent=this.value">
+                            <small class="metric-footer">Simulate early quantum computing breakthrough</small>
+                        </div>
+                        <div class="slider-control-group">
+                            <div class="slider-label-row">
+                                <span>Migration Speedup Factor</span>
+                                <span id="lblWhatifSpeed">1.8x</span>
+                            </div>
+                            <input type="range" id="sliderWhatifSpeed" class="cyber-slider" min="5" max="30" value="18"
+                                oninput="document.getElementById('lblWhatifSpeed').textContent=(this.value/10).toFixed(1)+'x'">
+                            <small class="metric-footer">Accelerated workforce &amp; tooling investment</small>
+                        </div>
+                        <div class="slider-control-group">
+                            <div class="slider-label-row">
+                                <span>Budget Multiplier</span>
+                                <span id="lblWhatifBudget">1.5x</span>
+                            </div>
+                            <input type="range" id="sliderWhatifBudget" class="cyber-slider" min="5" max="25" value="15"
+                                oninput="document.getElementById('lblWhatifBudget').textContent=(this.value/10).toFixed(1)+'x'">
+                            <small class="metric-footer">Capital expenditure multiplier</small>
+                        </div>
+                    </div>
+
+                    <!-- Side-by-Side Scenario Result -->
+                    <div class="grid-2">
+                        <div class="panel panel-cyber-cyan">
+                            <h4 class="panel-title" style="font-size:0.9rem;margin-bottom:0.5rem;">Baseline Scenario
+                                (Status Quo)</h4>
+                            <div class="grid-2">
+                                <div><span class="metric-title">CRQC Year:</span> <strong>2035</strong></div>
+                                <div><span class="metric-title">Exposure Gap:</span> <strong
+                                        style="color:var(--neon-pink);">+4 Years</strong></div>
+                                <div><span class="metric-title">Est. Risk Score:</span> <strong>64.2 / 100</strong>
+                                </div>
+                                <div><span class="metric-title">HNDL Risk:</span> <strong
+                                        style="color:var(--neon-pink);">High</strong></div>
+                            </div>
+                        </div>
+                        <div class="panel panel-cyber-green">
+                            <h4 class="panel-title" style="font-size:0.9rem;margin-bottom:0.5rem;">Simulated Scenario
+                                (Accelerated PQC)</h4>
+                            <div class="grid-2">
+                                <div><span class="metric-title">CRQC Year:</span> <strong
+                                        id="resWhatifCrqc">2030</strong></div>
+                                <div><span class="metric-title">Exposure Gap:</span> <strong
+                                        style="color:var(--neon-green);" id="resWhatifGap">0 Years (Protected)</strong>
+                                </div>
+                                <div><span class="metric-title">Est. Risk Score:</span> <strong
+                                        style="color:var(--neon-green);" id="resWhatifScore">28.4 / 100</strong></div>
+                                <div><span class="metric-title">HNDL Risk:</span> <strong
+                                        style="color:var(--neon-green);" id="resWhatifHndl">Resilient</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══ SECTION 12: WEBCRYPTO TOOLKIT ═══ -->
+            <section id="crypto" style="margin-bottom:3rem;">
+                <div class="panel panel-cyber-yellow">
+                    <div class="panel-header">
+                        <div>
+                            <h2 class="panel-title"><span>🔐</span> Digital Signature &amp; Cryptography Toolkit</h2>
+                            <p class="panel-subtitle">RSA-2048 key generation, signing, verification, encryption,
+                                SHA-256 avalanche &amp; QKD BB84 simulator — powered by Web Crypto API</p>
+                        </div>
+                        <span class="badge badge-warning">Web Crypto API</span>
+                    </div>
+
+                    <div class="btn-row" id="cryptoTabs">
+                        <button type="button" class="btn btn-primary btn-sm crypto-tab-btn active" data-cp="keygen"
+                            onclick="switchCryptoTab('keygen')">🔑 Key Gen</button>
+                        <button type="button" class="btn btn-secondary btn-sm crypto-tab-btn" data-cp="sign"
+                            onclick="switchCryptoTab('sign')">✍️ Sign &amp; Verify</button>
+                        <button type="button" class="btn btn-secondary btn-sm crypto-tab-btn" data-cp="enc"
+                            onclick="switchCryptoTab('enc')">🔒 Encrypt/Decrypt</button>
+                        <button type="button" class="btn btn-secondary btn-sm crypto-tab-btn" data-cp="hash"
+                            onclick="switchCryptoTab('hash')">🧬 SHA-256 Avalanche</button>
+                        <button type="button" class="btn btn-secondary btn-sm crypto-tab-btn" data-cp="cert"
+                            onclick="switchCryptoTab('cert')">📜 X.509 Certificate</button>
+                        <button type="button" class="btn btn-secondary btn-sm crypto-tab-btn" data-cp="qsim"
+                            onclick="switchCryptoTab('qsim')">⚛️ Quantum Noise</button>
+                        <button type="button" class="btn btn-secondary btn-sm crypto-tab-btn" data-cp="qkd"
+                            onclick="switchCryptoTab('qkd')">🛰️ QKD BB84</button>
+                    </div>
+
+                    <!-- 1. Key Gen -->
+                    <div class="crypto-panel" id="cp-keygen">
+                        <div class="panel">
+                            <div class="panel-header">
+                                <div>
+                                    <h4 class="panel-title">🔑 RSA-2048 Key Pair Generator</h4>
+                                    <p class="panel-subtitle">Web Crypto API — browser-native, zero external libraries
+                                    </p>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-primary" id="btnGenKeys"
+                                        onclick="generateRSAKeys()">🔑 Generate RSA Keys</button>
+                                    <button type="button" class="btn btn-secondary btn-sm"
+                                        onclick="copyCryptoElement('pubKeyOut')">📋 Copy Public</button>
+                                    <button type="button" class="btn btn-secondary btn-sm"
+                                        onclick="copyCryptoElement('privKeyOut')">📋 Copy Private</button>
+                                </div>
+                            </div>
+                            <div class="grid-2">
+                                <div>
+                                    <label class="form-label" for="pubKeyOut">🔓 Public Key (SPKI)</label>
+                                    <pre class="code-preview-box code-preview-cyan"
+                                        id="pubKeyOut">Click 'Generate RSA Keys' to create key pair...</pre>
+                                </div>
+                                <div>
+                                    <label class="form-label" for="privKeyOut">🔒 Private Key (PKCS8)</label>
+                                    <pre class="code-preview-box code-preview-pink"
+                                        id="privKeyOut">Click 'Generate RSA Keys' to create key pair...</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Sign & Verify -->
+                    <div class="crypto-panel" id="cp-sign" style="display:none;">
+                        <div class="panel">
+                            <h4 class="panel-title">✍️ Sign Document &amp; Verify Integrity</h4>
+                            <div class="grid-2" style="margin-top:0.75rem;">
+                                <div class="form-group">
+                                    <label class="form-label" for="signMsgInput">Plaintext Document</label>
+                                    <textarea class="form-control" id="signMsgInput"
+                                        rows="3">CONFIDENTIAL: Project-Q Quantum Defense SIH Authorization Payload</textarea>
+                                    <button type="button" class="btn btn-primary btn-sm" style="margin-top:0.5rem;"
+                                        onclick="signMessage()">✍️ Sign Message</button>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="sigHexOutput">Generated Digital Signature
+                                        (Hex)</label>
+                                    <textarea class="form-control" id="sigHexOutput" rows="3" readonly
+                                        placeholder="Signature will appear here..."></textarea>
+                                    <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
+                                        <button type="button" class="btn btn-primary btn-sm"
+                                            onclick="verifySignature()">✅ Verify Signature</button>
+                                        <button type="button" class="btn btn-secondary btn-sm"
+                                            onclick="tamperSignature()">⚡ Tamper Signature</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="sigVerifyStatus"
+                                style="margin-top:0.75rem;padding:0.75rem;border-radius:var(--radius-sm);display:none;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Encrypt / Decrypt -->
+                    <div class="crypto-panel" id="cp-enc" style="display:none;">
+                        <div class="panel">
+                            <h4 class="panel-title">🔒 RSA-OAEP Asymmetric Encryption</h4>
+                            <div class="grid-2" style="margin-top:0.75rem;">
+                                <div class="form-group">
+                                    <label class="form-label" for="encPlainInput">Data to Encrypt</label>
+                                    <textarea class="form-control" id="encPlainInput"
+                                        rows="3">Quantum Encryption Secret Session Key: 9f82c0b4e1</textarea>
+                                    <button type="button" class="btn btn-primary btn-sm" style="margin-top:0.5rem;"
+                                        onclick="encryptPlaintext()">🔒 Encrypt (Public Key)</button>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="encCipherOutput">Ciphertext (Base64)</label>
+                                    <textarea class="form-control" id="encCipherOutput" rows="3"
+                                        placeholder="Ciphertext will appear here..."></textarea>
+                                    <button type="button" class="btn btn-primary btn-sm" style="margin-top:0.5rem;"
+                                        onclick="decryptCiphertext()">🔓 Decrypt (Private Key)</button>
+                                </div>
+                            </div>
+                            <div id="decResultBox"
+                                style="margin-top:0.75rem;display:none;padding:0.75rem;background:var(--cyber-bg-elevated);border-radius:var(--radius-sm);">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. SHA-256 & Avalanche -->
+                    <div class="crypto-panel" id="cp-hash" style="display:none;">
+                        <div class="panel">
+                            <h4 class="panel-title">🧬 SHA-256 Digest &amp; Strict Avalanche Criterion</h4>
+                            <div class="grid-2" style="margin-top:0.75rem;">
+                                <div class="form-group">
+                                    <label class="form-label" for="hashInput">Input String (Edit one character to
+                                        observe bit flips)</label>
+                                    <input type="text" class="form-control" id="hashInput" value="QuantumSec-2026"
+                                        oninput="calculateSHA256()">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">SHA-256 Digest (256 bits)</label>
+                                    <input type="text" class="form-control val-mono" id="hashOutput" readonly>
+                                </div>
+                            </div>
+                            <div class="grid-3" style="margin-top:0.75rem;">
+                                <div class="avalanche-chip">
+                                    <span>Bits Flipped from Baseline</span>
+                                    <span id="avalancheFlipped">128 / 256</span>
+                                </div>
+                                <div class="avalanche-chip">
+                                    <span>Avalanche Percentage</span>
+                                    <span id="avalanchePercent">50.0% (Ideal: ~50%)</span>
+                                </div>
+                                <div class="avalanche-chip">
+                                    <span>Cryptographic Strictness</span>
+                                    <span style="color:var(--neon-green);">NIST Compliant</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. X.509 Certificate -->
+                    <div class="crypto-panel" id="cp-cert" style="display:none;">
+                        <div class="panel">
+                            <div class="panel-header">
+                                <div>
+                                    <h4 class="panel-title">📜 X.509 Certificate Generator &amp; Inspector</h4>
+                                    <p class="panel-subtitle">Simulate self-signed PKI certificate with public key
+                                        binding</p>
+                                </div>
+                                <button type="button" class="btn btn-primary btn-sm"
+                                    onclick="generateX509Certificate()">📜 Generate X.509</button>
+                            </div>
+                            <pre class="code-preview-box code-preview-cyan"
+                                id="certOutput">Click 'Generate X.509' to build certificate...</pre>
+                        </div>
+                    </div>
+
+                    <!-- 6. Quantum Noise Depolarizer -->
+                    <div class="crypto-panel" id="cp-qsim" style="display:none;">
+                        <div class="panel">
+                            <h4 class="panel-title">⚛️ Quantum Depolarizing Channel Simulation</h4>
+                            <p class="panel-subtitle">Model qubit decoherence under channel noise parameter $p$: $\rho
+                                \to (1-p)\rho + \frac{p}{2}I$</p>
+                            <div style="margin:1rem 0;">
+                                <label class="form-label" for="noiseSlider">Depolarizing Disturbance ($p$): <span
+                                        id="noiseVal">0.20</span></label>
+                                <input type="range" id="noiseSlider" class="cyber-slider" min="0" max="100" value="20"
+                                    oninput="updateQuantumSimulation()">
+                            </div>
+                            <div class="chart-box">
+                                <canvas id="fidelityChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 7. QKD BB84 -->
+                    <div class="crypto-panel" id="cp-qkd" style="display:none;">
+                        <div class="panel">
+                            <div class="panel-header">
+                                <div>
+                                    <h4 class="panel-title">🛰️ Quantum Key Distribution (QKD BB84) Simulator</h4>
+                                    <p class="panel-subtitle">Photon polarization bases ($+$ and $\times$) with Eve
+                                        eavesdropping detection</p>
+                                </div>
+                                <div style="display:flex;gap:0.75rem;align-items:center;">
+                                    <label class="checkbox-cyber">
+                                        <input type="checkbox" id="eveIntercept"> Eve Eavesdropping
+                                    </label>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="simulateQKD()">🛰️
+                                        Transmit Photons</button>
+                                </div>
+                            </div>
+                            <div class="comparison-table-wrapper"
+                                style="max-height:260px;overflow-y:auto;margin-top:0.75rem;">
+                                <table class="data-table compact-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Bit #</th>
+                                            <th>Alice Bit</th>
+                                            <th>Alice Basis</th>
+                                            <th>Bob Basis</th>
+                                            <th>Bob Measured</th>
+                                            <th>Basis Match?</th>
+                                            <th>Key Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="qkdTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══ SECTION 13: COMPLIANCE, AUDIT LOGS & REPORTS (§15) ═══ -->
+            <section id="reports" style="margin-bottom:3rem;">
+                <div class="panel panel-cyber-cyan">
+                    <div class="panel-header">
+                        <div>
+                            <h2 class="panel-title"><span>📑</span> Post-Quantum Compliance &amp; Executive Export (§15)
+                            </h2>
+                            <p class="panel-subtitle">Regulatory posture matrix (NIST, CNSA 2.0, BSI, ANSSI) and
+                                comprehensive audit logging</p>
+                        </div>
+                        <div class="btn-row">
+                            <button type="button" class="btn btn-primary btn-sm" onclick="exportExecutiveJSON()">📥
+                                Export JSON Report</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="exportInventoryCSV()">📊
+                                Export CSV Inventory</button>
+                        </div>
+                    </div>
+
+                    <!-- Regulatory Compliance Badges -->
+                    <div class="grid-4" style="margin-bottom:1.5rem;">
+                        <div class="metric-card-sm val-safe">
+                            <span class="metric-title">NIST PQC Standards</span>
+                            <div style="font-weight:700;margin-top:4px;color:var(--neon-green);">FIPS 203/204 Aligned
+                            </div>
+                            <span class="metric-footer"><span>ML-KEM &amp; ML-DSA</span></span>
+                        </div>
+                        <div class="metric-card-sm val-warn">
+                            <span class="metric-title">NSA CNSA 2.0</span>
+                            <div style="font-weight:700;margin-top:4px;color:var(--neon-yellow);">Transition Target:
+                                2030</div>
+                            <span class="metric-footer"><span>National Security PKI</span></span>
+                        </div>
+                        <div class="metric-card-sm val-purple">
+                            <span class="metric-title">BSI TR-02102 (DE)</span>
+                            <div style="font-weight:700;margin-top:4px;color:var(--neon-purple);">Hybrid Key Exchange
+                            </div>
+                            <span class="metric-footer"><span>X25519 + Kyber768</span></span>
+                        </div>
+                        <div class="metric-card-sm val-safe">
+                            <span class="metric-title">ANSSI Recommendations</span>
+                            <div style="font-weight:700;margin-top:4px;color:var(--neon-green);">Dual-Signature Ready
+                            </div>
+                            <span class="metric-footer"><span>Composite Certificates</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Audit Log Stream -->
+                    <h4 class="panel-title" style="font-size:0.95rem;margin-bottom:0.75rem;">🛡️ Live Cryptographic
+                        Audit Stream</h4>
+                    <div class="comparison-table-wrapper" style="max-height:240px;overflow-y:auto;">
+                        <table class="data-table compact-table" id="auditLogTable">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Action</th>
+                                    <th>Target Entity</th>
+                                    <th>User Role</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="auditLogTableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align:center;color:var(--text-muted);">Loading audit log
+                                        stream...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <p><strong>QuantumSec Defense</strong> — Post-Quantum Operations &amp; Security Console</p>
+                <p class="footer-sub">PennyLane + Qiskit Aer | NIST FIPS
+                    203/204/205 | Authentic CIC-IDS2017 Telemetry</p>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- ═══ ASSET FINDING DETAIL MODAL ═══ -->
+    <div id="findingModal" class="cyber-modal-backdrop">
+        <div class="cyber-modal-window">
+            <div class="cyber-modal-header">
+                <div class="cyber-modal-title" id="modalTitle"><span>🔍</span> Asset Finding Audit</div>
+                <button type="button" class="cyber-modal-close" onclick="closeFindingModal()">&times;</button>
             </div>
-
-            <div class="panel panel-cyber-yellow">
-                <div class="panel-header">
-                    <div>
-                        <h4 class="panel-title">Digital Signature Security &amp; QDS Protocol Verification</h4>
-                        <p class="panel-subtitle">Bell-State Entanglement Channel &amp; Quantum Bit Error Rate (QBER) Evaluation</p>
-                    </div>
-                    <span id="resSignatureBadge" class="badge badge-threat">REJECTED_TAMPERED</span>
-                </div>
-
-                <div class="grid-cards-4">
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">Threat Classification</span></div>
-                        <div class="val-mono" id="resCategory">Credential Theft &amp; Impersonation</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">Channel Disturbance</span></div>
-                        <div class="val-mono" id="resDisturbance">p = 0.65</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">State Fidelity (F)</span></div>
-                        <div class="metric-value" id="resFidelity">0.5125</div>
-                        <div class="metric-footer"><span>Threshold: &ge; 0.85</span></div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-header"><span class="metric-title">QBER (%)</span></div>
-                        <div class="metric-value" id="resQber">48.8%</div>
-                        <div class="metric-footer"><span>Tolerance: &le; 15%</span></div>
-                    </div>
-                </div>
-
-                <div id="resVerdictCallout" class="alert-callout alert-threat">
-                    <div>
-                        <strong id="resVerdictTitle">Adversarial Interception Detected!</strong>
-                        <p id="resVerdictDesc">
-                            Quantum Bit Error Rate (48.8%) exceeds safety tolerance. Disturbance parameter p=0.65 triggered automated signature rejection.
-                        </p>
-                    </div>
-                </div>
+            <div class="cyber-modal-body" id="modalBody">
+                Loading details...
             </div>
         </div>
     </div>
-</section>
 
-<!-- ================================================================= -->
-<!-- SECTION 5: DATASET TELEMETRY & THREAT MAPPING                     -->
-<!-- ================================================================= -->
-<section id="metrics">
-    <div class="panel panel-cyber-green">
-        <div class="panel-header">
-            <div>
-                <h2 class="panel-title"><span>📊</span> Authentic CIC-IDS2017 Dataset Telemetry &amp; 7 Attack Vectors</h2>
-                <p class="panel-subtitle">Authentic Canadian Institute for Cybersecurity intrusion telemetry mapped to digital signature threats</p>
-            </div>
-            <span class="badge badge-green">CIC-IDS2017</span>
-        </div>
+    <!-- Main Controller Script -->
+    <script src="static/js/main.js?v=4"></script>
+</body>
 
-        <div class="comparison-table-wrapper">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Attack Vector Class</th>
-                        <th>Mapped Cyber Threat Vector</th>
-                        <th>Disturbance (p)</th>
-                        <th>Impact on Digital Signature Infrastructure</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>BENIGN</strong></td>
-                        <td>Legitimate PKI operations &amp; document signing</td>
-                        <td class="val-mono">0.01</td>
-                        <td>Clean channel; Bell-state fidelity &ge; 99%; signatures verified authentic.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Brute Force</strong></td>
-                        <td>Credential spraying against HSM / signing API</td>
-                        <td class="val-mono">0.65</td>
-                        <td>Unauthorized private key usage attempts; induces high quantum decoherence.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>SQL Injection</strong></td>
-                        <td>Exfiltration / manipulation of public key certificates</td>
-                        <td class="val-mono">0.80</td>
-                        <td>Database key store corruption; immediate QDS security rejection.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>XSS</strong></td>
-                        <td>Session token hijacking for signer impersonation</td>
-                        <td class="val-mono">0.55</td>
-                        <td>Attacker obtains signing authorization context; quantum state disturbed.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Replay Attack</strong></td>
-                        <td>Signed payload replay &amp; nonce reuse</td>
-                        <td class="val-mono">0.50</td>
-                        <td>Re-submitting expired signatures to bypass non-repudiation audit trails.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Forgery Attack</strong></td>
-                        <td>X.509 certificate &amp; signature forgery</td>
-                        <td class="val-mono">0.75</td>
-                        <td>Fraudulent X.509 certificates crafted to bypass enterprise trust anchors.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Impersonation</strong></td>
-                        <td>Stolen key material / spoofed certs</td>
-                        <td class="val-mono">0.70</td>
-                        <td>Compromised signing identity executing unauthorized legal document sign-offs.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</section>
-{% endblock %}
+</html>

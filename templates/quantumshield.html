@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumShield v2 — Post-Quantum Risk Simulator</title>
+    <meta name="description"
+        content="QuantumShield v2: Explainable Post-Quantum Risk, Data Exposure, and Migration Simulator. Educational simulation platform with synthetic data only.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/css/quantumshield.css?v=3">
+</head>
+
+<body>
+    <!-- ═══ SIDEBAR NAVIGATION ═══ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="brand-icon">⚛</div>
+            <div class="brand-text">
+                <h1>QuantumShield</h1>
+                <span class="badge badge-sim">v2 SIMULATION</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Main Navigation">
+            <a href="#overview" class="nav-link active" data-page="overview" onclick="switchPage('overview')">
+                <span class="nav-icon">📊</span> Executive Overview
+            </a>
+            <a href="#inventory" class="nav-link" data-page="inventory" onclick="switchPage('inventory')">
+                <span class="nav-icon">🔍</span> Crypto Inventory
+            </a>
+            <a href="#lifecycle" class="nav-link" data-page="lifecycle" onclick="switchPage('lifecycle')">
+                <span class="nav-icon">⏳</span> Data Lifecycle
+            </a>
+            <a href="#risk" class="nav-link" data-page="risk" onclick="switchPage('risk')">
+                <span class="nav-icon">⚠️</span> Risk Analysis
+            </a>
+            <a href="#attack-surface" class="nav-link" data-page="attack-surface" onclick="switchPage('attack-surface')">
+                <span class="nav-icon">🕸️</span> Attack Surface
+            </a>
+            <a href="#signatures" class="nav-link" data-page="signatures" onclick="switchPage('signatures')">
+                <span class="nav-icon">✍️</span> Signature Forensics
+            </a>
+            <a href="#ledger" class="nav-link" data-page="ledger" onclick="switchPage('ledger')">
+                <span class="nav-icon">⛓️</span> Blockchain Ledger
+            </a>
+            <a href="#migration" class="nav-link" data-page="migration" onclick="switchPage('migration')">
+                <span class="nav-icon">🚀</span> Migration Planner
+            </a>
+            <a href="#whatif" class="nav-link" data-page="whatif" onclick="switchPage('whatif')">
+                <span class="nav-icon">🔮</span> What-If Simulator
+            </a>
+            <a href="#explainable" class="nav-link" data-page="explainable" onclick="switchPage('explainable')">
+                <span class="nav-icon">🧠</span> Explainable AI
+            </a>
+            <a href="#reports" class="nav-link" data-page="reports" onclick="switchPage('reports')">
+                <span class="nav-icon">📑</span> Reports & Export
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="dataset-selector">
+                <label for="dataset-select">Dataset Profile</label>
+                <select id="dataset-select" onchange="switchDataset(this.value)">
+                    <option value="A" selected>A — Legacy Enterprise</option>
+                    <option value="B">B — Mixed Transition</option>
+                    <option value="C">C — PQC Migration Program</option>
+                    <option value="D">D — Stress-Test</option>
+                </select>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="resetSimulation()">🔄 Reset Simulation</button>
+            <div class="disclaimer-badge">
+                ⚠️ Educational Simulation Only<br>
+                <small>All data is synthetic. Not a security guarantee.</small>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <main class="main-content" id="main-content">
+
+        <!-- Loading overlay -->
+        <div class="loading-overlay" id="loading-overlay" style="display:none;">
+            <div class="spinner"></div>
+            <p>Loading simulation data...</p>
+        </div>
+
+        <!-- ═══ PAGE: Executive Overview ═══ -->
+        <section class="page active" id="page-overview">
+            <div class="page-header">
+                <h2>Executive Overview</h2>
+                <p class="page-subtitle">Post-Quantum Cryptographic Risk Dashboard — <span id="profile-name-header">Legacy Enterprise</span></p>
+            </div>
+
+            <!-- Dashboard Cards (§15) -->
+            <div class="cards-grid" id="dashboard-cards">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- Risk Distribution Chart -->
+            <div class="grid-2col">
+                <div class="card">
+                    <h3>Risk Distribution</h3>
+                    <div class="chart-container chart-container-doughnut">
+                        <canvas id="risk-distribution-chart"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Quantum Status Overview</h3>
+                    <div class="chart-container chart-container-bar">
+                        <canvas id="quantum-status-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-2col">
+                <div class="card">
+                    <h3>Algorithm Distribution</h3>
+                    <div class="chart-container chart-container-bar">
+                        <canvas id="algo-distribution-chart"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Cryptographic Agility Score</h3>
+                    <div id="agility-gauge" class="gauge-container"></div>
+                    <div id="agility-factors"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ PAGE: Crypto Inventory ═══ -->
+        <section class="page" id="page-inventory">
+            <div class="page-header">
+                <h2>🔍 Cryptographic Inventory</h2>
+                <p class="page-subtitle">Algorithm discovery, classification, and finding details</p>
+            </div>
+
+            <div class="filter-bar">
+                <select id="filter-quantum-status" onchange="filterInventory()">
+                    <option value="">All Quantum Status</option>
+                    <option value="quantum-broken">Quantum-Broken (Shor)</option>
+                    <option value="quantum-weakened">Quantum-Weakened (Grover)</option>
+                    <option value="classically-broken">Classically Broken</option>
+                    <option value="quantum-resilient">Quantum-Resilient</option>
+                </select>
+                <select id="filter-risk-band" onchange="filterInventory()">
+                    <option value="">All Risk Bands</option>
+                    <option value="Critical">Critical (75–100)</option>
+                    <option value="High">High (50–74)</option>
+                    <option value="Moderate">Moderate (25–49)</option>
+                    <option value="Low">Low (0–24)</option>
+                </select>
+                <select id="filter-asset-type" onchange="filterInventory()">
+                    <option value="">All Asset Types</option>
+                    <option value="api">API</option>
+                    <option value="application">Application</option>
+                    <option value="database">Database</option>
+                    <option value="backup">Backup</option>
+                    <option value="certificate">Certificate</option>
+                    <option value="key_store">Key Store</option>
+                    <option value="third_party">Third-Party</option>
+                    <option value="ledger">Ledger</option>
+                </select>
+                <input type="text" id="filter-search" placeholder="Search assets..." oninput="filterInventory()">
+            </div>
+
+            <div class="table-container">
+                <table class="data-table" id="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>Priority</th>
+                            <th>Asset</th>
+                            <th>Type</th>
+                            <th>Algorithm</th>
+                            <th>Role</th>
+                            <th>Quantum Status</th>
+                            <th>Risk Score</th>
+                            <th>Classification</th>
+                            <th>HNDL</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-tbody"></tbody>
+                </table>
+            </div>
+
+            <!-- Finding Detail Modal -->
+            <div class="modal" id="finding-modal" style="display:none;">
+                <div class="modal-content">
+                    <button class="modal-close" onclick="closeModal('finding-modal')">&times;</button>
+                    <div id="finding-detail-content"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ PAGE: Data Lifecycle ═══ -->
+        <section class="page" id="page-lifecycle">
+            <div class="page-header">
+                <h2>⏳ Data Lifecycle & Exposure</h2>
+                <p class="page-subtitle">Visualize data lifecycle stages and quantum exposure windows</p>
+            </div>
+
+            <div class="filter-bar">
+                <select id="lifecycle-asset-select" onchange="loadLifecycle(this.value)">
+                    <option value="">Select an asset to view lifecycle...</option>
+                </select>
+            </div>
+
+            <div id="lifecycle-timeline" class="timeline-container">
+                <p class="placeholder-text">Select an asset above to view its data lifecycle timeline.</p>
+            </div>
+
+            <div id="lifecycle-analysis" class="card" style="display:none;">
+                <h3>Exposure Analysis</h3>
+                <div id="lifecycle-analysis-content"></div>
+            </div>
+        </section>
+
+        <!-- ═══ PAGE: Risk Analysis ═══ -->
+        <section class="page" id="page-risk">
+            <div class="page-header">
+                <h2>⚠️ Quantum Risk Analysis</h2>
+                <p class="page-subtitle">Explainable risk scores with factor breakdown</p>
+            </div>
+
+            <div class="grid-2col">
+                <div class="card">
+                    <h3>Risk Heatmap by Algorithm</h3>
+                    <div id="risk-heatmap" class="compact-plotly-box"></div>
+                </div>
+                <div class="card">
+                    <h3>Risk Factor Weights</h3>
+                    <div class="chart-container chart-container-radar">
+                        <canvas id="risk-factors-radar" height="190"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Top Critical Assets</h3>
+                <div id="critical-assets-list"></div>
+            </div>
+
+            <div class="card disclaimer-card">
+                <h3>⚠️ Disclaimer</h3>
+                <p>These risk scores are <strong>scenario-based prioritization aids</strong>, not predictions of when a 
+                Cryptographically Relevant Quantum Computer (CRQC) will exist. They should inform planning, not replace 
+                professional security assessment.</p>
+            </div>
+        </section>
+
+        <!-- ═══ PAGE: Attack Surface ═══ -->
+        <section class="page" id="page-attack-surface">
+            <div class="page-header">
+                <h2>🕸️ Attack Surface Graph</h2>
+                <p class="page-subtitle">Visualize cryptographic dependencies and vulnerable paths</p>
+            </div>
+
+            <div class="legend-bar">
+                <span class="legend-item"><span class="dot" style="background:#22c55e"></span> PQC-Ready</span>
+                <span class="legend-item"><span class="dot" style="background:#eab308"></span> Migration Planned</span>
+                <span class="legend-item"><span class="dot" style="background:#f97316"></span> High Risk</span>
+                <span class="legend-item"><span class="dot" style="background:#ef4444"></span> Critical</span>
+                <span class="legend-item"><span class="dot" style="background:#6b7280"></span> Unknown</span>
+                <span class="legend-item"><span class="dot" style="background:#3b82f6"></span> Isolated/Protected</span>
+            </div>
+
+            <div class="card graph-card">
+                <div id="attack-surface-graph" style="height:320px;"></div>
+            </div>
+
+            <div id="node-detail-panel" class="card" style="display:none;">
+                <h3 id="node-detail-title">Asset Details</h3>
+                <div id="node-detail-content"></div>
+            </div>
+        </section>
+
+        <!-- ═══ PAGE: Signature Forensics ═══ -->
+        <section class="page" id="page-signatures">
+            <div class="page-header">
+                <h2>✍️ Digital Signature Forensics</h2>
+                <p class="page-subtitle">Synthetic signature verification and quantum vulnerability analysis</p>
+            </div>
+
+            <div class="filter-bar">
+                <select id="sig-filter-status" onchange="filterSignatures()">
+                    <option value="">All Statuses</option>
+                    <option value="valid">Valid</option>
+                    <option value="tampered">Tampered</option>
+                    <option value="invalid">Invalid</option>
+                    <option value="expired">Expired</option>
+                </select>
+                <select id="sig-filter-quantum" onchange="filterSignatures()">
+                    <option value="">All Quantum Status</option>
+                    <option value="quantum-broken">Quantum-Broken</option>
+                    <option value="quantum-resilient">Quantum-Resilient</option>
+                </select>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table" id="signatures-table">
+                    <thead>
+                        <tr>
+                            <th>Sig ID</th>
+                            <th>Asset</th>
+                            <th>Algorithm</th>
+                            <th>Status</th>
+                            <th>Certificate</th>
+                            <th>Quantum Status</th>
+                            <th>Lifetime (yr)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="signatures-tbody"></tbody>
+                </table>
+            </div>
+
+            <!-- Signature Verification Modal -->
+            <div class="modal" id="sig-verify-modal" style="display:none;">
+                <div class="modal-content">
+                    <button class="modal-close" onclick="closeModal('sig-verify-modal')">&times;</button>
+                    <div id="sig-verify-content"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ PAGE: Blockchain Ledger ═══ -->
+        <section class="page" id="page-ledger">
+            <div class="page-header">
+                <h2>⛓️ Blockchain Ledger Simulator</h2>
+                <p class="page-subtitle">SimCoin (SIM) ledger — synthetic transactions, no real cryptocurrency</p>
+            </div>
+
+            <div class="action-bar">
+                <button class="btn btn-primary" onclick="verifyLedger()">🔍 Verify Chain Integrity</button>
+                <button class="btn btn-accent" onclick="migrateLedger()">🚀 Simulate PQC Migration</button>
+            </div>
+
+            <div id="ledger-verification-result" class="card" style="display:none;"></div>
+
+            <div class="card">
+                <h3>Signature Migration Status</h3>
+                <div class="chart-container chart-container-doughnut">
+                    <canvas id="ledger-migration-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table" id="ledger-table">
+                    <thead>
+                        <tr>
+                            <th>TX ID</th>
+                            <th>Block</th>
+                            <th>Sender</th>
+                            <th>Receiver</th>
+                            <th>Amount (SIM)</th>
+                            <th>Sig Algorithm</th>
+                            <th>Sig Status</th>
+                            <th>Migration</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ledger-tbody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ═══ PAGE: Migration Planner ═══ -->
+        <section class="page" id="page-migration">
+            <div class="page-header">
+                <h2>🚀 Post-Quantum Migration Planner</h2>
+                <p class="page-subtitle">11-phase migration workflow per NIST FIPS 203/204/205</p>
+            </div>
+
+            <div class="card">
+                <h3>Migration Phase Summary</h3>
+                <div class="chart-container chart-container-md">
+                    <canvas id="migration-phases-chart" height="170"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Standards References</h3>
+                <div class="standards-grid">
+                    <div class="standard-card">
+                        <h4>FIPS 203 — ML-KEM</h4>
+                        <p>Module-Lattice-Based Key Encapsulation Mechanism (from CRYSTALS-Kyber)</p>
+                        <span class="badge badge-blue">Key Establishment</span>
+                    </div>
+                    <div class="standard-card">
+                        <h4>FIPS 204 — ML-DSA</h4>
+                        <p>Module-Lattice-Based Digital Signature Algorithm (from CRYSTALS-Dilithium)</p>
+                        <span class="badge badge-green">General Signatures</span>
+                    </div>
+                    <div class="standard-card">
+                        <h4>FIPS 205 — SLH-DSA</h4>
+                        <p>Stateless Hash-Based Digital Signature Algorithm (from SPHINCS+)</p>
+                        <span class="badge badge-purple">Hash-Based Signatures</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table" id="migration-table">
+                    <thead>
+                        <tr>
+                            <th>Task ID</th>
+                            <th>Asset</th>
+                            <th>Current Algo</th>
+                            <th>Target</th>
+                            <th>Phase</th>
+                            <th>Progress</th>
+                            <th>Cost</th>
+                            <th>Approval</th>
+                            <th>Validation</th>
+                        </tr>
+                    </thead>
+                    <tbody id="migration-tbody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ═══ PAGE: What-If Simulator ═══ -->
+        <section class="page" id="page-whatif">
+            <div class="page-header">
+                <h2>🔮 What-If Simulation</h2>
+                <p class="page-subtitle">Model different quantum scenarios and compare outcomes</p>
+            </div>
+
+            <div class="card">
+                <h3>Scenario Controls</h3>
+                <div class="controls-grid">
+                    <div class="control-group">
+                        <label for="whatif-quantum">Quantum Capability</label>
+                        <input type="range" id="whatif-quantum" min="0" max="100" value="50" oninput="updateWhatIfLabel(this)">
+                        <span class="range-label" id="whatif-quantum-label">50%</span>
+                    </div>
+                    <div class="control-group">
+                        <label for="whatif-qubits">Logical Qubits</label>
+                        <input type="range" id="whatif-qubits" min="100" max="10000" value="4000" step="100" oninput="updateWhatIfLabel(this)">
+                        <span class="range-label" id="whatif-qubits-label">4,000</span>
+                    </div>
+                    <div class="control-group">
+                        <label for="whatif-errorcorr">Error Correction Maturity</label>
+                        <input type="range" id="whatif-errorcorr" min="0" max="100" value="50" oninput="updateWhatIfLabel(this)">
+                        <span class="range-label" id="whatif-errorcorr-label">50%</span>
+                    </div>
+                    <div class="control-group">
+                        <label for="whatif-lifetime">Data Lifetime Override (years)</label>
+                        <input type="number" id="whatif-lifetime" min="1" max="50" value="" placeholder="No override">
+                    </div>
+                    <div class="control-group">
+                        <label for="whatif-budget">Migration Budget ($)</label>
+                        <input type="number" id="whatif-budget" min="0" step="10000" value="" placeholder="Unlimited">
+                    </div>
+                    <div class="control-group">
+                        <label for="whatif-rotation">Key Rotation (days)</label>
+                        <input type="number" id="whatif-rotation" min="1" max="730" value="" placeholder="No override">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="runWhatIf()">▶️ Run Simulation</button>
+            </div>
+
+            <div id="whatif-results" class="card" style="display:none;">
+                <h3>Simulation Results</h3>
+                <div id="whatif-results-content"></div>
+                <p class="disclaimer-text">⚠️ This is an illustrative simulation, not a forecast.</p>
+            </div>
+        </section>
+
+        <!-- ═══ PAGE: Explainable AI ═══ -->
+        <section class="page" id="page-explainable">
+            <div class="page-header">
+                <h2>🧠 Explainable AI</h2>
+                <p class="page-subtitle">Every recommendation explained — no black-box output</p>
+            </div>
+
+            <div class="card">
+                <h3>How Risk Scores Work</h3>
+                <div class="explanation-block">
+                    <p>QuantumShield uses a <strong>weighted factor model</strong> to compute risk scores. Each factor is
+                    independently normalized to 0–100 and contributes to the final score based on its weight:</p>
+
+                    <table class="data-table compact">
+                        <thead>
+                            <tr><th>Factor</th><th>Weight</th><th>What It Measures</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Algorithm Risk</td><td>25%</td><td>Vulnerability of the cryptographic algorithm to quantum attack (Shor/Grover)</td></tr>
+                            <tr><td>Data Sensitivity</td><td>20%</td><td>Classification level (Public → Highly Restricted)</td></tr>
+                            <tr><td>Data Lifetime</td><td>15%</td><td>How long data must remain confidential</td></tr>
+                            <tr><td>Asset Criticality</td><td>15%</td><td>Business impact if compromised</td></tr>
+                            <tr><td>Internet Exposure</td><td>10%</td><td>External attack surface accessibility</td></tr>
+                            <tr><td>Migration Complexity</td><td>10%</td><td>Difficulty of transitioning to PQC</td></tr>
+                            <tr><td>Inventory Uncertainty</td><td>5%</td><td>Confidence in the asset's classification</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Top Findings with Explanations</h3>
+                <div id="explainable-findings"></div>
+            </div>
+
+            <div class="card disclaimer-card">
+                <h3>What This System Cannot Determine</h3>
+                <ul class="limitations-list">
+                    <li>Exact date of CRQC availability — no one can predict this</li>
+                    <li>Whether specific implementations have side-channel vulnerabilities</li>
+                    <li>Organizational readiness factors beyond this simulation's scope</li>
+                    <li>Compliance with specific regulatory frameworks</li>
+                    <li>Real-world performance impact of PQC algorithm deployment</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ═══ PAGE: Reports ═══ -->
+        <section class="page" id="page-reports">
+            <div class="page-header">
+                <h2>📑 Reports & Export</h2>
+                <p class="page-subtitle">Generate and export simulation reports</p>
+            </div>
+
+            <div class="action-bar">
+                <button class="btn btn-primary" onclick="exportJSON()">📥 Export Full Report (JSON)</button>
+                <button class="btn btn-accent" onclick="exportCSV()">📊 Export Assets (CSV)</button>
+            </div>
+
+            <div class="card">
+                <h3>Security Limitations</h3>
+                <div class="limitations-block">
+                    <p>This project is an <strong>educational simulation and risk-management demonstrator</strong>. It:</p>
+                    <ul>
+                        <li>Does <strong>not</strong> guarantee security</li>
+                        <li>Does <strong>not</strong> predict the exact arrival of CRQCs</li>
+                        <li>Is <strong>not</strong> a substitute for professional security assessment</li>
+                        <li>Uses <strong>only synthetic data</strong> — no real credentials, keys, or certificates</li>
+                        <li>Runs <strong>locally</strong> with no external network scanning</li>
+                        <li>All remediation is <strong>simulated and dry-run only</strong></li>
+                    </ul>
+                    <p><strong>Recommendation:</strong> Get expert review before any production use of these concepts.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ═══ JAVASCRIPT ═══ -->
+    <script src="/static/js/quantumshield.js?v=3"></script>
+</body>
+
+</html>
